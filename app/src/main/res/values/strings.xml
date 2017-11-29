@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Flashcard</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_flashcard_show">FlashcardShowActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <string name="word">Write Sentence...</string>
+    <string name="read">Write how to read it ...</string>
+    <string name="translate">Write the translation...</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="play">Play!</string>
+    <string name="newAlbum">new</string>
+    <string name="nameNewAlbum">Introduce a name ..</string>
+    <string name="descriptionNewAlbum">Introduce a description ...</string>
+</resources>
