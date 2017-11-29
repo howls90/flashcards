@@ -40,7 +40,7 @@ public class FlashcardListAdapter extends BaseAdapter{
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View v = View.inflate(mContext,R.layout.item_flashcard_list,null);
-        TextView word = (TextView)v.findViewById(R.id.albumName);
+        TextView word = (TextView)v.findViewById(R.id.word);
         word.setText(flashcardList.get(i).getWord());
 
         v.setTag(flashcardList.get(i).getId());

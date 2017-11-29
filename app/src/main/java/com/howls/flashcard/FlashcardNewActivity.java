@@ -6,6 +6,7 @@ import android.media.MediaRecorder;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -75,9 +76,9 @@ public class FlashcardNewActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item_flashcardnew_return:
-                //Intent intent = new Intent(this, FlashcardListActivity.class);
+                Intent intent = new Intent(this, FlashcardListActivity.class);
                 //intent.putExtra(EXTRA_MESSAGE, albumId);
-                //startActivity(intent);
+                startActivity(intent);
                 return true;
 
             case R.id.item_flashcardnew_ok:
@@ -91,7 +92,7 @@ public class FlashcardNewActivity extends AppCompatActivity {
 
     public void start() {
 
-        word = (EditText)findViewById(R.id.albumName);
+        word = (EditText)findViewById(R.id.word);
         String wordS = word.getText().toString();
 
         outputFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"+wordS+".3gp";
@@ -133,23 +134,29 @@ public class FlashcardNewActivity extends AppCompatActivity {
 
     public void addFlashcard() {
         db = new MyDBHandle(this);
-        word = (EditText)findViewById(R.id.albumName);
-        read = (EditText)findViewById(R.id.editText2);
-        translate = (EditText)findViewById(R.id.editText3);
+        word = (EditText)findViewById(R.id.word);
+        read = (EditText)findViewById(R.id.read);
+        translate = (EditText)findViewById(R.id.translate);
 
         String wordS = word.getText().toString();
         String readS = read.getText().toString();
         String translateS = translate.getText().toString();
 
-        Album album = db.getAlbum(albumId);
-        String languageS = album.getDescription();
+        if (wordS.equals("") || translateS.equals("")) {
+            Toast.makeText(this,"Word form and Translate form must be fullfil", Toast.LENGTH_SHORT).show();
+        } else {
+            Album album = db.getAlbum(albumId);
+            String languageS = album.getDescription();
 
-        Flashcard flashcard = new Flashcard(wordS,readS,translateS,languageS, outputFile,albumId);
+            Flashcard flashcard = new Flashcard(wordS,readS,translateS,languageS, outputFile,albumId);
 
-        db.addFlashcard(flashcard);
+            db.addFlashcard(flashcard);
 
-        //Intent intent = new Intent(this, FlashcardListActivity.class);
-        //intent.putExtra(EXTRA_MESSAGE, albumId);
-        //startActivity(intent);
+            //Intent intent = new Intent(this, FlashcardListActivity.class);
+            //intent.putExtra(EXTRA_MESSAGE, albumId);
+            //startActivity(intent);
+        }
+
+
     }
 }

@@ -41,7 +41,7 @@ public class AlbumListAdapter extends BaseAdapter{
     public View getView(int i, View view, ViewGroup viewGroup) {
         View v = View.inflate(mContext,R.layout.item_album_list,null);
 
-        TextView albumName = (TextView)v.findViewById(R.id.albumName);
+        TextView albumName = (TextView)v.findViewById(R.id.word);
         TextView albumLang = (TextView)v.findViewById(R.id.albumDescription);
 
         albumName.setText(albumList.get(i).getName());
