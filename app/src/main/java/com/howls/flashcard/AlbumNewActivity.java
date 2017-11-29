@@ -55,8 +55,8 @@ public class AlbumNewActivity extends AppCompatActivity {
                 db.addAlbum(album);
 
             default:
-                intent = new Intent(this, AlbumListActivity.class);
-                startActivity(intent);
+                //intent = new Intent(this, AlbumListActivity.class);
+                //startActivity(intent);
                 return super.onOptionsItemSelected(item);
         }
     }
