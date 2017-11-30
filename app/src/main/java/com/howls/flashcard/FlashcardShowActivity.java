@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,7 +38,6 @@ public class FlashcardShowActivity extends AppCompatActivity {
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
@@ -55,8 +55,7 @@ public class FlashcardShowActivity extends AppCompatActivity {
 
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_edit) {
             return true;
         }
         if (id == R.id.item_flashcardnew_return) {
@@ -68,6 +67,8 @@ public class FlashcardShowActivity extends AppCompatActivity {
     }
 
     public static class PlaceholderFragment extends Fragment {
+
+        MyDBHandle db;
 
         private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -88,11 +89,19 @@ public class FlashcardShowActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_flashcard_show, container, false);
 
+            //Intent intent = getIntent();
+            //String message = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
+
+
+            //Flashcard flashcard = db.getFlashcard();
             TextView word = (TextView) rootView.findViewById(R.id.word);
             TextView read = (TextView) rootView.findViewById(R.id.read);
             TextView translate = (TextView) rootView.findViewById(R.id.translate);
+            //word.setText(flashcard.getWord());
+            //read.setText(flashcard.getRead());
+            //translate.setText(flashcard.getTranslate());
 
-            //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            Log.i("aaaaa",getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
         }
     }
