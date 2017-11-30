@@ -39,7 +39,7 @@ public class FlashcardNewActivity extends AppCompatActivity {
         setTitle("Create new Flashcard");
 
         Intent intent = getIntent();
-        //albumId = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
+        albumId = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
 
         record = (ImageButton)findViewById(R.id.record);
         play = (ImageButton)findViewById(R.id.play);
@@ -77,7 +77,7 @@ public class FlashcardNewActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.item_flashcardnew_return:
                 Intent intent = new Intent(this, FlashcardListActivity.class);
-                //intent.putExtra(EXTRA_MESSAGE, albumId);
+                intent.putExtra(EXTRA_MESSAGE, albumId);
                 startActivity(intent);
                 return true;
 
@@ -145,16 +145,14 @@ public class FlashcardNewActivity extends AppCompatActivity {
         if (wordS.equals("") || translateS.equals("")) {
             Toast.makeText(this,"Word form and Translate form must be fullfil", Toast.LENGTH_SHORT).show();
         } else {
-            Album album = db.getAlbum(albumId);
-            String languageS = album.getDescription();
 
-            Flashcard flashcard = new Flashcard(wordS,readS,translateS,languageS, outputFile,albumId);
+            Flashcard flashcard = new Flashcard(wordS,readS,translateS, outputFile,"1");
 
             db.addFlashcard(flashcard);
 
-            //Intent intent = new Intent(this, FlashcardListActivity.class);
-            //intent.putExtra(EXTRA_MESSAGE, albumId);
-            //startActivity(intent);
+            Intent intent = new Intent(this, FlashcardListActivity.class);
+            intent.putExtra(EXTRA_MESSAGE, albumId);
+            startActivity(intent);
         }
 
 

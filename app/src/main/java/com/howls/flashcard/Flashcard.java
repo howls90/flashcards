@@ -8,13 +8,12 @@ public class Flashcard {
     private int id;
     private String word, read,translate,language,sound,albumId;
 
-    public Flashcard(String word, String read, String translate, String language, String sound, String albumId) {
+    public Flashcard(String word, String read, String translate, String language, String sound) {
         this.word = word;
         this.read = read;
         this.translate = translate;
         this.language = language;
         this.sound = sound;
-        this.albumId = albumId;
     }
 
     public int getId() {
@@ -60,12 +59,4 @@ public class Flashcard {
     public String getSound() { return sound; }
 
     public void setSound(String sound) { this.sound = sound; }
-
-    public String getAlbumId() {
-        return albumId;
-    }
-
-    public void setAlbumId(String albumId) {
-        this.albumId = albumId;
-    }
 }

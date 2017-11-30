@@ -2,9 +2,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.howls.flashcard.FlashcardShowActivity">
+
+    <item android:id="@+id/item_flashcardnew_return"
+        android:title="return"
+        android:icon="@drawable/ic_keyboard_return_white_24dp"
+        app:showAsAction="always" />
+
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_edit"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="Edit"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_delete"
+        android:orderInCategory="100"
+        android:title="Delete"
         app:showAsAction="never" />
 </menu>

@@ -22,7 +22,7 @@ public class MyDBHandle extends SQLiteOpenHelper {
     private static final String COLUMN_FLASHCARD_TRANSLATE = "translate";
     private static final String COLUMN_FLASHCARD_LANGUAGE = "language";
     private static final String COLUMN_FLASHCARD_SOUND = "sound";
-    private static final String COLUMN_FLASHCARD_ALBUM_ID = "albumId";
+    //private static final String COLUMN_FLASHCARD_ALBUM_ID = "albumId";
 
     private static final String TABLE_ALBUM = "album";
     private static final String COLUMN_ALBUM_NAME = "name";
@@ -39,7 +39,7 @@ public class MyDBHandle extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         query = "create table " + TABLE_ALBUM + " (id integer primary key autoincrement, "+COLUMN_ALBUM_NAME+" text, "+COLUMN_ALBUM_DESCRIPTION+" text)";
         sqLiteDatabase.execSQL(query);
-        query = "create table " + TABLE_FLASHCARD + " (id integer primary key autoincrement, "+COLUMN_FLASHCARD_NAME+" text, "+COLUMN_FLASHCARD_READ+" text, "+COLUMN_FLASHCARD_TRANSLATE+" text, "+COLUMN_FLASHCARD_LANGUAGE+" text, "+COLUMN_FLASHCARD_SOUND+" text, "+COLUMN_FLASHCARD_ALBUM_ID+" integer, foreign key("+COLUMN_FLASHCARD_ALBUM_ID+") REFERENCES "+TABLE_ALBUM+"("+COLUMN_FLASHCARD_ALBUM_ID+"))";
+        query = "create table " + TABLE_FLASHCARD + " (id integer primary key autoincrement, "+COLUMN_FLASHCARD_NAME+" text, "+COLUMN_FLASHCARD_READ+" text, "+COLUMN_FLASHCARD_TRANSLATE+" text, "+COLUMN_FLASHCARD_LANGUAGE+" text, "+COLUMN_FLASHCARD_SOUND+" text)";
         sqLiteDatabase.execSQL(query);
     }
 
@@ -50,6 +50,8 @@ public class MyDBHandle extends SQLiteOpenHelper {
         query = "DROP TABLE IF EXISTS " + TABLE_FLASHCARD;
         sqLiteDatabase.execSQL(query);
         onCreate(sqLiteDatabase);
+
+        addAlbum(new Album("Default",null));
     }
 
     public void addFlashcard(Flashcard flashcard) {
@@ -59,7 +61,7 @@ public class MyDBHandle extends SQLiteOpenHelper {
         values.put(COLUMN_FLASHCARD_TRANSLATE,flashcard.getTranslate());
         values.put(COLUMN_FLASHCARD_LANGUAGE,flashcard.getLanguage());
         values.put(COLUMN_FLASHCARD_SOUND,flashcard.getSound());
-        values.put(COLUMN_FLASHCARD_ALBUM_ID,flashcard.getAlbumId());
+        //values.put(COLUMN_FLASHCARD_ALBUM_ID,flashcard.getAlbumId());
         SQLiteDatabase db = getWritableDatabase();
         db.insert(TABLE_FLASHCARD,null,values);
         db.close();
@@ -77,10 +79,10 @@ public class MyDBHandle extends SQLiteOpenHelper {
     public Flashcard getFlashcard(String id) {
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.rawQuery( "select * from "+TABLE_FLASHCARD+" where id="+id, null );
+        Cursor cursor = db.rawQuery( "select * from "+TABLE_FLASHCARD,null);
         if (cursor != null)
             cursor.moveToFirst();
-        Flashcard flashcard = new Flashcard(cursor.getString(1), cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6));
+        Flashcard flashcard = new Flashcard(cursor.getString(1), cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5));
         flashcard.setId(Integer.parseInt(cursor.getString(0)));
         return flashcard;
 
@@ -98,16 +100,16 @@ public class MyDBHandle extends SQLiteOpenHelper {
 
     }
 
-    public List<Flashcard> getAllFashcards(String albumId) {
+    public List<Flashcard> getAllFashcards() {
         List<Flashcard> flashcardList = new ArrayList<Flashcard>();
 
-        String selectQuery = "select * from " + TABLE_FLASHCARD+" where "+COLUMN_FLASHCARD_ALBUM_ID+"="+albumId;
+        String selectQuery = "select * from " + TABLE_FLASHCARD;
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
-                Flashcard flashcard = new Flashcard(cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4), cursor.getString(5), cursor.getString(6));
+                Flashcard flashcard = new Flashcard(cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4), cursor.getString(5));
                 flashcard.setId(Integer.parseInt(cursor.getString(0)));
                 flashcardList.add(flashcard);
             } while (cursor.moveToNext());
