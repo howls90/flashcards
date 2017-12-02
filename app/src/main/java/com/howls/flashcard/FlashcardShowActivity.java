@@ -1,6 +1,7 @@
 package com.howls.flashcard;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -18,8 +19,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.List;
 
 public class FlashcardShowActivity extends AppCompatActivity {
@@ -69,6 +73,7 @@ public class FlashcardShowActivity extends AppCompatActivity {
     public static class PlaceholderFragment extends Fragment {
 
         MyDBHandle db;
+        String outputFile;
 
         private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -85,23 +90,46 @@ public class FlashcardShowActivity extends AppCompatActivity {
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_flashcard_show, container, false);
 
-            //Intent intent = getIntent();
-            //String message = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
 
+            db = new MyDBHandle(getContext());
 
-            //Flashcard flashcard = db.getFlashcard();
+            List<Flashcard> flashcard = db.getAllFashcards();
             TextView word = (TextView) rootView.findViewById(R.id.word);
             TextView read = (TextView) rootView.findViewById(R.id.read);
             TextView translate = (TextView) rootView.findViewById(R.id.translate);
-            //word.setText(flashcard.getWord());
-            //read.setText(flashcard.getRead());
-            //translate.setText(flashcard.getTranslate());
+            ImageButton play = (ImageButton) rootView.findViewById(R.id.play);
 
-            Log.i("aaaaa",getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            int pos = Integer.parseInt(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+
+            word.setText(flashcard.get(pos).getWord());
+            translate.setText(flashcard.get(pos).getTranslate());
+
+            outputFile = flashcard.get(pos).getSound();
+
+            play.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (outputFile != null) {
+                        try {
+                            MediaPlayer m = new MediaPlayer();
+                            m.setDataSource(outputFile);
+                            m.prepare();
+                            m.start();
+
+                            Toast.makeText(getContext(), "Playing Audio", Toast.LENGTH_SHORT).show();
+                        } catch (IOException e) {
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "Not recording", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
             return rootView;
         }
     }
@@ -114,7 +142,7 @@ public class FlashcardShowActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return PlaceholderFragment.newInstance(position + 1);
+            return PlaceholderFragment.newInstance(position);
         }
 
         @Override

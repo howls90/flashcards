@@ -48,18 +48,17 @@ public class FlashcardNewActivity extends AppCompatActivity {
         play.setEnabled(false);
         delete.setEnabled(false);
 
-
         record.setOnTouchListener(new View.OnTouchListener() {
 
             public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                    start();
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    play.setEnabled(true);
-                    delete.setEnabled(true);
-                    stop();
-                }
-                return true;
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                start();
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                play.setEnabled(true);
+                delete.setEnabled(true);
+                stop();
+            }
+            return true;
             }
         });
 
@@ -140,13 +139,16 @@ public class FlashcardNewActivity extends AppCompatActivity {
 
         String wordS = word.getText().toString();
         String readS = read.getText().toString();
+        if (readS.equals("")) {
+            readS = wordS;
+        }
         String translateS = translate.getText().toString();
 
         if (wordS.equals("") || translateS.equals("")) {
             Toast.makeText(this,"Word form and Translate form must be fullfil", Toast.LENGTH_SHORT).show();
         } else {
 
-            Flashcard flashcard = new Flashcard(wordS,readS,translateS, outputFile,"1");
+            Flashcard flashcard = new Flashcard(wordS,readS,translateS, outputFile);
 
             db.addFlashcard(flashcard);
 
