@@ -86,6 +86,13 @@ public class MyDBHandle extends SQLiteOpenHelper {
 
     }
 
+    public void deleteFlashcard(String id) {
+        SQLiteDatabase db = getReadableDatabase();
+        query = "DELETE FROM " + TABLE_FLASHCARD+" WHERE id="+id;
+        db.execSQL(query);
+        db.close();
+    }
+
     public Album getAlbum(String id) {
         SQLiteDatabase db = getReadableDatabase();
 

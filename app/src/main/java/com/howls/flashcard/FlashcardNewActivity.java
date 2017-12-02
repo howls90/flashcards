@@ -6,6 +6,7 @@ import android.media.MediaRecorder;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -139,15 +140,18 @@ public class FlashcardNewActivity extends AppCompatActivity {
 
         String wordS = word.getText().toString();
         String readS = read.getText().toString();
-        if (readS.equals("")) {
+
+        if (TextUtils.isEmpty(readS)) {
             readS = wordS;
         }
+
         String translateS = translate.getText().toString();
 
         if (wordS.equals("") || translateS.equals("")) {
             Toast.makeText(this,"Word form and Translate form must be fullfil", Toast.LENGTH_SHORT).show();
         } else {
 
+            Log.i("wwww",readS);
             Flashcard flashcard = new Flashcard(wordS,readS,translateS, outputFile);
 
             db.addFlashcard(flashcard);

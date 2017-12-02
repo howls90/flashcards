@@ -1,5 +1,6 @@
 package com.howls.flashcard;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.support.design.widget.FloatingActionButton;
@@ -19,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,6 +64,9 @@ public class FlashcardShowActivity extends AppCompatActivity {
         if (id == R.id.action_edit) {
             return true;
         }
+        if (id == R.id.action_delete) {
+
+        }
         if (id == R.id.item_flashcardnew_return) {
             Intent intent = new Intent(this,FlashcardListActivity.class);
             startActivity(intent);
@@ -91,23 +96,25 @@ public class FlashcardShowActivity extends AppCompatActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            setHasOptionsMenu(true);
             View rootView = inflater.inflate(R.layout.fragment_flashcard_show, container, false);
-
 
             db = new MyDBHandle(getContext());
 
-            List<Flashcard> flashcard = db.getAllFashcards();
+            final List<Flashcard> flashcards = db.getAllFashcards();
             TextView word = (TextView) rootView.findViewById(R.id.word);
             TextView read = (TextView) rootView.findViewById(R.id.read);
             TextView translate = (TextView) rootView.findViewById(R.id.translate);
             ImageButton play = (ImageButton) rootView.findViewById(R.id.play);
+            Button delete = (Button)rootView.findViewById(R.id.delete);
 
             int pos = Integer.parseInt(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            final Flashcard flashcard = flashcards.get(pos);
+            word.setText(flashcard.getWord());
+            read.setText(flashcard.getRead());
+            translate.setText(flashcard.getTranslate());
 
-            word.setText(flashcard.get(pos).getWord());
-            translate.setText(flashcard.get(pos).getTranslate());
-
-            outputFile = flashcard.get(pos).getSound();
+            outputFile = flashcard.getSound();
 
             play.setOnClickListener(new View.OnClickListener()
             {
@@ -127,6 +134,17 @@ public class FlashcardShowActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(getContext(), "Not recording", Toast.LENGTH_SHORT).show();
                     }
+                }
+            });
+
+            delete.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                   db.deleteFlashcard(String.valueOf(flashcard.getId()));
+                   Intent intent = new Intent(getContext(),FlashcardListActivity.class);
+                   startActivity(intent);
                 }
             });
 
