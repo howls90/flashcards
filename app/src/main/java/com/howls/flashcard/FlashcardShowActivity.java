@@ -1,10 +1,12 @@
 package com.howls.flashcard;
 
 import android.content.ClipData;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -142,9 +144,25 @@ public class FlashcardShowActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v)
                 {
-                   db.deleteFlashcard(String.valueOf(flashcard.getId()));
-                   Intent intent = new Intent(getContext(),FlashcardListActivity.class);
-                   startActivity(intent);
+                    AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                    alert.setMessage("Are you sure you want to delete?");
+                    alert.setCancelable(false);
+                    alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            db.deleteFlashcard(String.valueOf(flashcard.getId()));
+                            Intent intent = new Intent(getContext(),FlashcardListActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                    alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+                    alert.create().show();
+
                 }
             });
 
