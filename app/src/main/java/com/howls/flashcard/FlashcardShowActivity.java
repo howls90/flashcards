@@ -27,6 +27,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -116,8 +117,6 @@ public class FlashcardShowActivity extends AppCompatActivity {
             read.setText(flashcard.getRead());
             translate.setText(flashcard.getTranslate());
 
-            outputFile = flashcard.getSound();
-
             play.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -126,7 +125,7 @@ public class FlashcardShowActivity extends AppCompatActivity {
                     if (outputFile != null) {
                         try {
                             MediaPlayer m = new MediaPlayer();
-                            m.setDataSource(outputFile);
+                            m.setDataSource(flashcard.getSound());
                             m.prepare();
                             m.start();
 
@@ -150,6 +149,8 @@ public class FlashcardShowActivity extends AppCompatActivity {
                     alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            File sound = new File(flashcard.getSound());
+                            sound.delete();
                             db.deleteFlashcard(String.valueOf(flashcard.getId()));
                             Intent intent = new Intent(getContext(),FlashcardListActivity.class);
                             startActivity(intent);

@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 
 public class FlashcardNewActivity extends AppCompatActivity {
@@ -60,6 +61,18 @@ public class FlashcardNewActivity extends AppCompatActivity {
                 stop();
             }
             return true;
+            }
+        });
+
+        delete.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                File sound = new File(outputFile);
+                sound.delete();
+                play.setEnabled(false);
+                Toast.makeText(getApplicationContext(),"Audio Deleted", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -150,8 +163,6 @@ public class FlashcardNewActivity extends AppCompatActivity {
         if (wordS.equals("") || translateS.equals("")) {
             Toast.makeText(this,"Word form and Translate form must be fullfil", Toast.LENGTH_SHORT).show();
         } else {
-
-            Log.i("wwww",readS);
             Flashcard flashcard = new Flashcard(wordS,readS,translateS, outputFile);
 
             db.addFlashcard(flashcard);
