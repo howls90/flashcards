@@ -1,6 +1,7 @@
 package com.howls.flashcard;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.io.IOException;
 import java.util.List;
 
 public class FlashcardListActivity extends AppCompatActivity
@@ -26,6 +28,7 @@ public class FlashcardListActivity extends AppCompatActivity
     MyDBHandle db;
     private ListView flashcardLayout;
     private FlashcardListAdapter adapter;
+    private List<Flashcard> flashcardList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,7 @@ public class FlashcardListActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         db = new MyDBHandle(this);
-        List<Flashcard> flashcardList = db.getAllFashcards();
+        flashcardList = db.getAllFashcards();
 
         flashcardLayout = (ListView)findViewById(R.id.listViewFlashcard);
 
@@ -89,6 +92,20 @@ public class FlashcardListActivity extends AppCompatActivity
         if (id == R.id.item_add) {
             Intent intent = new Intent(this, FlashcardNewActivity.class);
             startActivity(intent);
+        }
+        if (id == R.id.item_play) {
+            flashcardList = db.getAllFashcards();
+            for(int i = 0;i<flashcardList.size();i++)
+            {
+                try {
+                    MediaPlayer m = new MediaPlayer();
+                    m.setDataSource(flashcardList.get(i).getSound());
+                    m.prepare();
+                    m.start();
+                } catch (IOException e) {
+
+                }
+            }
         }
 
         return super.onOptionsItemSelected(item);

@@ -24,7 +24,7 @@ public class FlashcardNewActivity extends AppCompatActivity {
 
     public static final String EXTRA_MESSAGE = "com.howls.languagenotes.AlbumId";
 
-    private EditText word, read, translate;
+    private EditText word, read, translate, examples, notes;
     MyDBHandle db;
 
     MediaRecorder myAudioRecord;
@@ -150,9 +150,13 @@ public class FlashcardNewActivity extends AppCompatActivity {
         word = (EditText)findViewById(R.id.word);
         read = (EditText)findViewById(R.id.read);
         translate = (EditText)findViewById(R.id.translate);
+        examples = (EditText)findViewById(R.id.examples);
+        notes = (EditText)findViewById(R.id.notes);
 
         String wordS = word.getText().toString();
         String readS = read.getText().toString();
+        String examplesS = examples.getText().toString();
+        String notesS = notes.getText().toString();
 
         if (TextUtils.isEmpty(readS)) {
             readS = wordS;

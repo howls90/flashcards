@@ -6,7 +6,7 @@ package com.howls.flashcard;
 
 public class Flashcard {
     private int id;
-    private String word, read,translate,language,sound,albumId;
+    private String word, read,translate,sound;
 
     public Flashcard(String word, String read, String translate, String sound) {
         this.word = word;
@@ -43,11 +43,10 @@ public class Flashcard {
         return translate;
     }
 
-    public void setTranslate(String translate) {
-        this.translate = translate;
-    }
+    public void setTranslate(String translate) { this.translate = translate; }
 
     public String getSound() { return sound; }
 
     public void setSound(String sound) { this.sound = sound; }
+
 }

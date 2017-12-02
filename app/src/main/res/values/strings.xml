@@ -11,6 +11,8 @@
     <string name="word">Write Sentence...</string>
     <string name="read">Write how to read it ...</string>
     <string name="translate">Write the translation...</string>
+    <string name="examples">Write an example...</string>
+    <string name="notes">Write notes...</string>
     <string name="start">Start</string>
     <string name="stop">Stop</string>
     <string name="play">Play!</string>

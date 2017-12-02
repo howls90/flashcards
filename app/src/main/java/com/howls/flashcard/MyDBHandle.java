@@ -21,6 +21,8 @@ public class MyDBHandle extends SQLiteOpenHelper {
     private static final String COLUMN_FLASHCARD_READ = "read";
     private static final String COLUMN_FLASHCARD_TRANSLATE = "translate";
     private static final String COLUMN_FLASHCARD_SOUND = "sound";
+    //private static final String COLUMN_FLASHCARD_EXAMPLES = "examples";
+    //private static final String COLUMN_FLASHCARD_NOTES = "notes";
 
     private static final String TABLE_ALBUM = "album";
     private static final String COLUMN_ALBUM_NAME = "name";
@@ -30,14 +32,14 @@ public class MyDBHandle extends SQLiteOpenHelper {
 
 
     public MyDBHandle(Context context) {
-        super(context, "lang14.db", null, 1);
+        super(context, "lang16.db", null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         query = "create table " + TABLE_ALBUM + " (id integer primary key autoincrement, "+COLUMN_ALBUM_NAME+" text, "+COLUMN_ALBUM_DESCRIPTION+" text)";
         sqLiteDatabase.execSQL(query);
-        query = "create table " + TABLE_FLASHCARD + " (id integer primary key autoincrement, "+COLUMN_FLASHCARD_NAME+" text, "+COLUMN_FLASHCARD_READ+" text, "+COLUMN_FLASHCARD_TRANSLATE+" text, "+COLUMN_FLASHCARD_SOUND+" text)";
+        query = "create table " + TABLE_FLASHCARD + " (id integer primary key autoincrement, "+COLUMN_FLASHCARD_NAME+" text, "+COLUMN_FLASHCARD_READ+" text, "+COLUMN_FLASHCARD_TRANSLATE+" text, "+COLUMN_FLASHCARD_SOUND+" text)";//+COLUMN_FLASHCARD_EXAMPLES+" text, "+COLUMN_FLASHCARD_NOTES+"text)";
         sqLiteDatabase.execSQL(query);
     }
 
@@ -58,6 +60,8 @@ public class MyDBHandle extends SQLiteOpenHelper {
         values.put(COLUMN_FLASHCARD_READ,flashcard.getRead());
         values.put(COLUMN_FLASHCARD_TRANSLATE,flashcard.getTranslate());
         values.put(COLUMN_FLASHCARD_SOUND,flashcard.getSound());
+        //values.put(COLUMN_FLASHCARD_EXAMPLES,flashcard.getExamples());
+        //values.put(COLUMN_FLASHCARD_NOTES,flashcard.getNotes());
         SQLiteDatabase db = getWritableDatabase();
         db.insert(TABLE_FLASHCARD,null,values);
         db.close();
