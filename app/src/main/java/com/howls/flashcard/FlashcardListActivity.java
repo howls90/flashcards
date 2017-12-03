@@ -29,6 +29,8 @@ public class FlashcardListActivity extends AppCompatActivity
     private ListView flashcardLayout;
     private FlashcardListAdapter adapter;
     private List<Flashcard> flashcardList;
+    MediaPlayer m;
+    int i = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,36 @@ public class FlashcardListActivity extends AppCompatActivity
         return true;
     }
 
+    public void play(int i){
+        try {
+            m = new MediaPlayer();
+            m.setDataSource(flashcardList.get(i).getSound());
+            m.prepare();
+            m.start();
+        } catch (IOException e) {}
+    }
+
+    public void playAudio(String path) {
+        try {
+            m = new MediaPlayer();
+            m.setDataSource(path);
+            m.prepare();
+            m.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    m.stop();
+                    if (i < flashcardList.size()-1) {
+                        i++;
+                        if (flashcardList.get(i).getSound() != null) {
+                            playAudio(flashcardList.get(i).getSound());
+                        }
+                    } else i = 0;
+                }
+            });
+            m.start();
+        } catch (IOException e) {}
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -94,18 +126,9 @@ public class FlashcardListActivity extends AppCompatActivity
             startActivity(intent);
         }
         if (id == R.id.item_play) {
-            flashcardList = db.getAllFashcards();
-            for(int i = 0;i<flashcardList.size();i++)
-            {
-                try {
-                    MediaPlayer m = new MediaPlayer();
-                    m.setDataSource(flashcardList.get(i).getSound());
-                    m.prepare();
-                    m.start();
-                } catch (IOException e) {
 
-                }
-            }
+            playAudio(flashcardList.get(0).getSound());
+
         }
 
         return super.onOptionsItemSelected(item);

@@ -116,6 +116,7 @@ public class FlashcardShowActivity extends AppCompatActivity {
             word.setText(flashcard.getWord());
             read.setText(flashcard.getRead());
             translate.setText(flashcard.getTranslate());
+            outputFile = flashcard.getSound();
 
             play.setOnClickListener(new View.OnClickListener()
             {
@@ -130,8 +131,7 @@ public class FlashcardShowActivity extends AppCompatActivity {
                             m.start();
 
                             Toast.makeText(getContext(), "Playing Audio", Toast.LENGTH_SHORT).show();
-                        } catch (IOException e) {
-                        }
+                        } catch (IOException e) {}
                     } else {
                         Toast.makeText(getContext(), "Not recording", Toast.LENGTH_SHORT).show();
                     }
