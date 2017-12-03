@@ -69,33 +69,32 @@ public class FlashcardListActivity extends AppCompatActivity
             }
         });
 
-        flashcardLayout.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+        flashcardLayout.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
 
             @Override
-            public boolean onChildClick(ExpandableListView parent, View v,int groupPosition, int childPosition, long id) {
-                Log.i("eeee","dinss");
+            public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
                 try {
                     MediaPlayer m = new MediaPlayer();
-                    m.setDataSource(flashcardList.get(groupPosition).getSound());
+                    m.setDataSource(flashcardList.get(i).getSound());
                     m.prepare();
                     m.start();
                 } catch (IOException e) {}
-
-                return true;  // i missed this
+                return false;
             }
         });
 
-        /*flashcardLayout.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View view, int position,long id) {
-                view.setSelected(true);
+        flashcardLayout.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
-                /*Intent intent = new Intent(getApplicationContext(), FlashcardShowActivity.class);
-                String flashcardId = view.getTag().toString();
-                intent.putExtra(EXTRA_MESSAGE, flashcardId);
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                Intent intent = new Intent(getApplicationContext(), FlashcardShowActivity.class);
+                String flashcardId = v.getTag().toString();
+                Log.i("sasds",String.valueOf(groupPosition));
+                intent.putExtra(EXTRA_MESSAGE, String.valueOf(groupPosition));
                 startActivity(intent);
+                return true;
             }
-        });*/
+        });
     }
 
     @Override

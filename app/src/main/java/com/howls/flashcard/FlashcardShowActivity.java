@@ -45,10 +45,16 @@ public class FlashcardShowActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Intent intent = getIntent();
+        String pos = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
+        Log.i("sasdseeeee",String.valueOf(pos));
+
+
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setCurrentItem(Integer.valueOf(pos));
 
     }
 
