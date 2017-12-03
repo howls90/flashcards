@@ -33,6 +33,7 @@ public class FlashcardListActivity extends AppCompatActivity
     private ExpandableListView flashcardLayout;
     private FlashcardListAdapter adapter;
     private List<Flashcard> flashcardList;
+    private List<Album> albumList;
     MediaPlayer m;
     int i = 0;
 
@@ -54,12 +55,33 @@ public class FlashcardListActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        Menu menu = navigationView.getMenu();
 
         db = new MyDBHandle(this);
-        flashcardList = db.getAllFashcards();
+
+        albumList = db.getAllAlbums();
+
+        if (albumList.size() == 0) {
+            db.addAlbum(new Album("Default"));
+            finish();
+            startActivity(getIntent());
+        } else {
+            for (i=0;i<albumList.size();i++) {
+                final Album album =  albumList.get(i);
+                menu.add(album.getName()).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        setTitle(album.getName());
+                        return false;
+                    }
+                });
+
+            }
+        }
+
 
         flashcardLayout = (ExpandableListView)findViewById(R.id.listViewFlashcard);
-
+        flashcardList = db.getAllFashcards();
         adapter = new FlashcardListAdapter(this, flashcardList);
         flashcardLayout.setAdapter(adapter);
 
@@ -78,13 +100,13 @@ public class FlashcardListActivity extends AppCompatActivity
 
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
-                try {
-                    MediaPlayer m = new MediaPlayer();
-                    m.setDataSource(flashcardList.get(i).getSound());
-                    m.prepare();
-                    m.start();
-                } catch (IOException e) {}
-                return false;
+            try {
+                MediaPlayer m = new MediaPlayer();
+                m.setDataSource(flashcardList.get(i).getSound());
+                m.prepare();
+                m.start();
+            } catch (IOException e) {}
+            return false;
             }
         });
 
@@ -92,12 +114,12 @@ public class FlashcardListActivity extends AppCompatActivity
 
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Intent intent = new Intent(getApplicationContext(), FlashcardShowActivity.class);
-                String flashcardId = v.getTag().toString();
-                Log.i("sasds",String.valueOf(groupPosition));
-                intent.putExtra(EXTRA_MESSAGE, String.valueOf(groupPosition));
-                startActivity(intent);
-                return true;
+            Intent intent = new Intent(getApplicationContext(), FlashcardShowActivity.class);
+            String flashcardId = v.getTag().toString();
+            Log.i("sasds",String.valueOf(groupPosition));
+            intent.putExtra(EXTRA_MESSAGE, String.valueOf(groupPosition));
+            startActivity(intent);
+            return true;
             }
         });
     }
@@ -136,8 +158,13 @@ public class FlashcardListActivity extends AppCompatActivity
 
         alert.setPositiveButton("Create", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                String album = edittext.getText().toString();
-                Log.i("aaaa",album);
+                String name = edittext.getText().toString();
+                Album album = new Album(name);
+
+                db = new MyDBHandle(getApplicationContext());
+                db.addAlbum(album);
+                finish();
+                startActivity(getIntent());
             }
         });
 
@@ -199,15 +226,7 @@ public class FlashcardListActivity extends AppCompatActivity
 
         int id = item.getItemId();
 
-        if (id == R.id.nav_default) {
-            setTitle("Default");
-        } else if (id == R.id.nav_thai) {
-            setTitle("Thai");
-        } else if (id == R.id.nav_japanese) {
-            setTitle("Japanese");
-        } else if (id == R.id.nav_english) {
-            setTitle("English");
-        }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

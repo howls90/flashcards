@@ -26,18 +26,18 @@ public class MyDBHandle extends SQLiteOpenHelper {
 
     private static final String TABLE_ALBUM = "album";
     private static final String COLUMN_ALBUM_NAME = "name";
-    private static final String COLUMN_ALBUM_NUM = "num";
+    //private static final String COLUMN_ALBUM_NUM = "num";
 
     private String query;
 
 
     public MyDBHandle(Context context) {
-        super(context, "lang16.db", null, 1);
+        super(context, "lang21.db", null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        query = "create table " + TABLE_ALBUM + " (id integer primary key autoincrement, "+COLUMN_ALBUM_NAME+" text, "+COLUMN_ALBUM_NUM+" integer)";
+        query = "create table " + TABLE_ALBUM + " (id integer primary key autoincrement, "+COLUMN_ALBUM_NAME+" text)";
         sqLiteDatabase.execSQL(query);
         query = "create table " + TABLE_FLASHCARD + " (id integer primary key autoincrement, "+COLUMN_FLASHCARD_NAME+" text, "+COLUMN_FLASHCARD_READ+" text, "+COLUMN_FLASHCARD_TRANSLATE+" text, "+COLUMN_FLASHCARD_SOUND+" text)";//+COLUMN_FLASHCARD_EXAMPLES+" text, "+COLUMN_FLASHCARD_NOTES+"text)";
         sqLiteDatabase.execSQL(query);
@@ -50,8 +50,6 @@ public class MyDBHandle extends SQLiteOpenHelper {
         query = "DROP TABLE IF EXISTS " + TABLE_FLASHCARD;
         sqLiteDatabase.execSQL(query);
         onCreate(sqLiteDatabase);
-
-        addAlbum(new Album("Default"));
     }
 
     public void addFlashcard(Flashcard flashcard) {
@@ -70,7 +68,7 @@ public class MyDBHandle extends SQLiteOpenHelper {
     public void addAlbum(Album album) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_ALBUM_NAME,album.getName());
-        values.put(COLUMN_ALBUM_NUM,album.getNum());
+        //values.put(COLUMN_ALBUM_NUM, 0);
         SQLiteDatabase db = getWritableDatabase();
         db.insert(TABLE_ALBUM,null,values);
         db.close();
