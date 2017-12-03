@@ -8,10 +8,8 @@
     tools:context="com.howls.flashcard.FlashcardListActivity"
     tools:showIn="@layout/app_bar_flashcard_list">
 
-    <ListView
+    <ExpandableListView
         android:id="@+id/listViewFlashcard"
-        android:layout_width="350dp"
-        android:layout_height="0dp"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </android.support.constraint.ConstraintLayout>

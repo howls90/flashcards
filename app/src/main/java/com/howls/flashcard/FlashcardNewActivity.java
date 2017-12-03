@@ -175,7 +175,5 @@ public class FlashcardNewActivity extends AppCompatActivity {
             intent.putExtra(EXTRA_MESSAGE, albumId);
             startActivity(intent);
         }
-
-
     }
 }

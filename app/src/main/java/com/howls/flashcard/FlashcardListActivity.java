@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class FlashcardListActivity extends AppCompatActivity
 
     public static final String EXTRA_MESSAGE = "com.howls.languagenotes.AlbumId";
     MyDBHandle db;
-    private ListView flashcardLayout;
+    private ExpandableListView flashcardLayout;
     private FlashcardListAdapter adapter;
     private List<Flashcard> flashcardList;
     MediaPlayer m;
@@ -52,20 +53,49 @@ public class FlashcardListActivity extends AppCompatActivity
         db = new MyDBHandle(this);
         flashcardList = db.getAllFashcards();
 
-        flashcardLayout = (ListView)findViewById(R.id.listViewFlashcard);
+        flashcardLayout = (ExpandableListView)findViewById(R.id.listViewFlashcard);
 
         adapter = new FlashcardListAdapter(this, flashcardList);
         flashcardLayout.setAdapter(adapter);
 
-        flashcardLayout.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        flashcardLayout.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            int previousItem = -1;
+
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                if(groupPosition != previousItem )
+                    flashcardLayout.collapseGroup(previousItem );
+                previousItem = groupPosition;
+            }
+        });
+
+        flashcardLayout.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v,int groupPosition, int childPosition, long id) {
+                Log.i("eeee","dinss");
+                try {
+                    MediaPlayer m = new MediaPlayer();
+                    m.setDataSource(flashcardList.get(groupPosition).getSound());
+                    m.prepare();
+                    m.start();
+                } catch (IOException e) {}
+
+                return true;  // i missed this
+            }
+        });
+
+        /*flashcardLayout.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> arg0, View view, int position,long id) {
-                Intent intent = new Intent(getApplicationContext(), FlashcardShowActivity.class);
+                view.setSelected(true);
+
+                /*Intent intent = new Intent(getApplicationContext(), FlashcardShowActivity.class);
                 String flashcardId = view.getTag().toString();
                 intent.putExtra(EXTRA_MESSAGE, flashcardId);
                 startActivity(intent);
             }
-        });
+        });*/
     }
 
     @Override
@@ -106,6 +136,8 @@ public class FlashcardListActivity extends AppCompatActivity
                         i++;
                         if (flashcardList.get(i).getSound() != null) {
                             playAudio(flashcardList.get(i).getSound());
+                        } else {
+
                         }
                     } else i = 0;
                 }
