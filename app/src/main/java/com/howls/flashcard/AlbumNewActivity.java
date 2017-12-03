@@ -54,6 +54,10 @@ public class AlbumNewActivity extends AppCompatActivity {
                 db = new MyDBHandle(this);
                 db.addAlbum(album);
 
+            case R.id.item_return:
+                Intent intent = new Intent(this,FlashcardListActivity.class);
+                startActivity(intent);
+
             default:
                 //intent = new Intent(this, AlbumListActivity.class);
                 //startActivity(intent);

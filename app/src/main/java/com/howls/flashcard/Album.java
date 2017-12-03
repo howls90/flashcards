@@ -6,12 +6,11 @@ package com.howls.flashcard;
 
 public class Album {
 
-    private int id;
-    private String name, description;
+    private int id, num;
+    private String name;
 
-    public Album(String name, String description) {
+    public Album(String name) {
         this.name = name;
-        this.description = description;
     }
 
     public int getId() {
@@ -30,12 +29,7 @@ public class Album {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
+    public int getNum() {return num;}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
+    public void setNum(int num) {this.num = num;}
 }

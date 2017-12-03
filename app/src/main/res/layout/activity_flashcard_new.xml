@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.howls.languagenotes.FlashcardNewActivity">
+    tools:context="com.howls.flashcard.AlbumNewActivity">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -67,7 +67,8 @@
             android:background="@drawable/record_button"
             android:src="@drawable/ic_mic_white_36dp"
             tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp" />
+            tools:layout_editor_absoluteY="0dp"
+            tools:ignore="MissingConstraints" />
 
         <ImageButton
             android:id="@+id/play"

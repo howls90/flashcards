@@ -26,7 +26,7 @@ public class MyDBHandle extends SQLiteOpenHelper {
 
     private static final String TABLE_ALBUM = "album";
     private static final String COLUMN_ALBUM_NAME = "name";
-    private static final String COLUMN_ALBUM_DESCRIPTION = "description";
+    private static final String COLUMN_ALBUM_NUM = "num";
 
     private String query;
 
@@ -37,7 +37,7 @@ public class MyDBHandle extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        query = "create table " + TABLE_ALBUM + " (id integer primary key autoincrement, "+COLUMN_ALBUM_NAME+" text, "+COLUMN_ALBUM_DESCRIPTION+" text)";
+        query = "create table " + TABLE_ALBUM + " (id integer primary key autoincrement, "+COLUMN_ALBUM_NAME+" text, "+COLUMN_ALBUM_NUM+" integer)";
         sqLiteDatabase.execSQL(query);
         query = "create table " + TABLE_FLASHCARD + " (id integer primary key autoincrement, "+COLUMN_FLASHCARD_NAME+" text, "+COLUMN_FLASHCARD_READ+" text, "+COLUMN_FLASHCARD_TRANSLATE+" text, "+COLUMN_FLASHCARD_SOUND+" text)";//+COLUMN_FLASHCARD_EXAMPLES+" text, "+COLUMN_FLASHCARD_NOTES+"text)";
         sqLiteDatabase.execSQL(query);
@@ -51,7 +51,7 @@ public class MyDBHandle extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(query);
         onCreate(sqLiteDatabase);
 
-        addAlbum(new Album("Default",null));
+        addAlbum(new Album("Default"));
     }
 
     public void addFlashcard(Flashcard flashcard) {
@@ -70,7 +70,7 @@ public class MyDBHandle extends SQLiteOpenHelper {
     public void addAlbum(Album album) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_ALBUM_NAME,album.getName());
-        values.put(COLUMN_ALBUM_DESCRIPTION,album.getDescription());
+        values.put(COLUMN_ALBUM_NUM,album.getNum());
         SQLiteDatabase db = getWritableDatabase();
         db.insert(TABLE_ALBUM,null,values);
         db.close();
@@ -104,7 +104,7 @@ public class MyDBHandle extends SQLiteOpenHelper {
 
         if (cursor != null)
             cursor.moveToFirst();
-        Album album = new Album(cursor.getString(1), cursor.getString(2));
+        Album album = new Album(cursor.getString(1));
         album.setId(Integer.parseInt(cursor.getString(0)));
         db.close();
         return album;
@@ -138,7 +138,7 @@ public class MyDBHandle extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                Album album = new Album(cursor.getString(1),cursor.getString(2));
+                Album album = new Album(cursor.getString(1));
                 album.setId(Integer.parseInt(cursor.getString(0)));
                 albumList.add(album);
             } while (cursor.moveToNext());

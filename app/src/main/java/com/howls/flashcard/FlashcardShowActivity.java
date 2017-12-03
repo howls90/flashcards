@@ -111,11 +111,11 @@ public class FlashcardShowActivity extends AppCompatActivity {
             db = new MyDBHandle(getContext());
 
             final List<Flashcard> flashcards = db.getAllFashcards();
-            TextView word = (TextView) rootView.findViewById(R.id.word);
-            TextView read = (TextView) rootView.findViewById(R.id.read);
-            TextView translate = (TextView) rootView.findViewById(R.id.translate);
-            ImageButton play = (ImageButton) rootView.findViewById(R.id.play);
-            Button delete = (Button)rootView.findViewById(R.id.delete);
+            TextView word = rootView.findViewById(R.id.word);
+            TextView read = rootView.findViewById(R.id.read);
+            TextView translate = rootView.findViewById(R.id.translate);
+            ImageButton play = rootView.findViewById(R.id.play);
+            Button delete = rootView.findViewById(R.id.delete);
 
             int pos = Integer.parseInt(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             final Flashcard flashcard = flashcards.get(pos);

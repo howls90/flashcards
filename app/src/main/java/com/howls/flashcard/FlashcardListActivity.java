@@ -1,10 +1,12 @@
 package com.howls.flashcard;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -16,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 
@@ -36,6 +39,8 @@ public class FlashcardListActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setTitle("Default");
 
         setContentView(R.layout.activity_flashcard_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -122,6 +127,29 @@ public class FlashcardListActivity extends AppCompatActivity
         } catch (IOException e) {}
     }
 
+    public void newAlbum(View view) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        final EditText edittext = new EditText(this);
+
+        alert.setTitle("New Album");
+        alert.setView(edittext);
+
+        alert.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String album = edittext.getText().toString();
+                Log.i("aaaa",album);
+            }
+        });
+
+        alert.setNegativeButton("Return", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // what ever you want to do with No option.
+            }
+        });
+
+        alert.show();
+    }
+
     public void playAudio(String path) {
         try {
             m = new MediaPlayer();
@@ -171,18 +199,14 @@ public class FlashcardListActivity extends AppCompatActivity
 
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_default) {
+            setTitle("Default");
+        } else if (id == R.id.nav_thai) {
+            setTitle("Thai");
+        } else if (id == R.id.nav_japanese) {
+            setTitle("Japanese");
+        } else if (id == R.id.nav_english) {
+            setTitle("English");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
