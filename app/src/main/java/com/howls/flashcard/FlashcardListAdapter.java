@@ -2,6 +2,8 @@ package com.howls.flashcard;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -9,7 +11,11 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Created by howls on 17/11/23.
@@ -81,5 +87,21 @@ public class FlashcardListAdapter extends BaseExpandableListAdapter{
     @Override
     public boolean isChildSelectable(int i, int i1) {
         return true;
+    }
+
+    public void filterData(List<Flashcard> flashcardsOrigin , String query) {
+        query = query.toLowerCase();
+        List<Flashcard> newList = new ArrayList<Flashcard>();
+        newList.clear();
+
+        for (Flashcard flashcard : flashcardsOrigin) {
+            if (flashcard.getWord().toLowerCase().contains(query) || flashcard.getTranslate().toLowerCase().contains(query)) {
+                newList.add(flashcard);
+            }
+
+        }
+
+        this.flashcardList = newList;
+        notifyDataSetChanged();
     }
 }

@@ -18,12 +18,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class FlashcardListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -37,12 +41,13 @@ public class FlashcardListActivity extends AppCompatActivity
     private MediaPlayer m;
     int i = 0;
     int albumId = 1;
+    Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTitle("Default");
+        setTitle("");
 
         setContentView(R.layout.activity_flashcard_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -55,15 +60,14 @@ public class FlashcardListActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        Menu menu = navigationView.getMenu();
+
+        menu = navigationView.getMenu();
 
         db = new MyDBHandle(this);
 
         Intent intent = getIntent();
         if (intent.hasExtra("AlbumId")) {
             albumId = Integer.valueOf(intent.getStringExtra(FlashcardNewActivity.EXTRA_MESSAGE));
-            Album album = db.getAlbum(String.valueOf(albumId));
-            setTitle(album.getName());
         }
 
         albumList = db.getAllAlbums();
@@ -78,7 +82,11 @@ public class FlashcardListActivity extends AppCompatActivity
                 menu.add(album.getName()).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        setTitle(album.getName());
+                        int size = menu.size();
+                        for (int i = 0; i < size; i++) {
+                            menu.getItem(i).setChecked(false);
+                        }
+                        menuItem.setChecked(true);
                         albumId=album.getId();
                         flashcardLayout = (ExpandableListView)findViewById(R.id.listViewFlashcard);
                         flashcardList = db.getAllFashcards(String.valueOf(albumId));
@@ -89,8 +97,10 @@ public class FlashcardListActivity extends AppCompatActivity
                 });
 
             }
+
         }
 
+        menu.getItem(0).setChecked(true);
 
         flashcardLayout = (ExpandableListView)findViewById(R.id.listViewFlashcard);
         flashcardList = db.getAllFashcards(String.valueOf(albumId));
@@ -147,6 +157,22 @@ public class FlashcardListActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.flashcard_list, menu);
+        MenuItem item = menu.findItem(R.id.app_bar_search);
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.filterData(flashcardList, newText);
+                return false;
+            }
+
+        });
+
         return true;
     }
 
@@ -193,6 +219,7 @@ public class FlashcardListActivity extends AppCompatActivity
             m.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
+                    flashcardLayout.expandGroup(i);
                     m.stop();
                     if (i < flashcardList.size()-1) {
                         i++;
@@ -212,7 +239,12 @@ public class FlashcardListActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_edit) {
+        if (id == R.id.item_game) {
+            flashcardLayout = (ExpandableListView)findViewById(R.id.listViewFlashcard);
+            flashcardList = db.getAllFashcards(String.valueOf(albumId));
+            Collections.shuffle(flashcardList);
+            adapter = new FlashcardListAdapter(getApplicationContext(), flashcardList);
+            flashcardLayout.setAdapter(adapter);
             return true;
         }
         if (id == R.id.item_add) {
@@ -222,6 +254,12 @@ public class FlashcardListActivity extends AppCompatActivity
         }
         if (id == R.id.item_play) {
             playAudio(flashcardList.get(0).getSound());
+        }
+        if (id == R.id.item_album_delete) {
+            db.deleteAlbum(String.valueOf(albumId));
+            Intent intent = new Intent(getApplicationContext(), FlashcardListActivity.class);
+            intent.putExtra(EXTRA_MESSAGE, "1");
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

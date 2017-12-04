@@ -40,7 +40,7 @@ public class MyDBHandle extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         query = "create table " + TABLE_ALBUM + " (id integer primary key autoincrement, "+COLUMN_ALBUM_NAME+" text)";
         sqLiteDatabase.execSQL(query);
-        query = "create table " + TABLE_FLASHCARD + " (id integer primary key autoincrement, "+COLUMN_FLASHCARD_NAME+" text, "+COLUMN_FLASHCARD_READ+" text, "+COLUMN_FLASHCARD_TRANSLATE+" text, "+COLUMN_FLASHCARD_SOUND+" text, "+COLUMN_FLASHCARD_ALBUM+" integer, FOREIGN KEY("+COLUMN_FLASHCARD_ALBUM+") REFERENCES "+TABLE_ALBUM+"(id))";
+        query = "create table " + TABLE_FLASHCARD + " (id integer primary key autoincrement, "+COLUMN_FLASHCARD_NAME+" text, "+COLUMN_FLASHCARD_READ+" text, "+COLUMN_FLASHCARD_TRANSLATE+" text, "+COLUMN_FLASHCARD_SOUND+" text, "+COLUMN_FLASHCARD_ALBUM+" integer, FOREIGN KEY("+COLUMN_FLASHCARD_ALBUM+") REFERENCES "+TABLE_ALBUM+"(id) ON DELETE CASCADE)";
         sqLiteDatabase.execSQL(query);
     }
 
@@ -93,6 +93,13 @@ public class MyDBHandle extends SQLiteOpenHelper {
     public void deleteFlashcard(String id) {
         SQLiteDatabase db = getReadableDatabase();
         query = "DELETE FROM " + TABLE_FLASHCARD+" WHERE id="+id;
+        db.execSQL(query);
+        db.close();
+    }
+
+    public void deleteAlbum(String id) {
+        SQLiteDatabase db = getReadableDatabase();
+        query = "DELETE FROM " + TABLE_ALBUM+" WHERE id="+id;
         db.execSQL(query);
         db.close();
     }
