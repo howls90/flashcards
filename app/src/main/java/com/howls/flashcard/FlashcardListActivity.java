@@ -47,8 +47,6 @@ public class FlashcardListActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTitle("");
-
         setContentView(R.layout.activity_flashcard_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -64,13 +62,19 @@ public class FlashcardListActivity extends AppCompatActivity
         menu = navigationView.getMenu();
 
         db = new MyDBHandle(this);
+        albumList = db.getAllAlbums();
 
         Intent intent = getIntent();
         if (intent.hasExtra("AlbumId")) {
             albumId = Integer.valueOf(intent.getStringExtra(FlashcardNewActivity.EXTRA_MESSAGE));
+            setTitle(db.getAlbum(String.valueOf(albumId)).getName());
+            //menu.getItem(albumList.indexOf(db.getAlbum(String.valueOf(albumId)))).setChecked(true);
+        } else {
+            setTitle("Default");
+            //menu.getItem(0).setChecked(true);
         }
 
-        albumList = db.getAllAlbums();
+
 
         if (albumList.size() == 0) {
             db.addAlbum(new Album("Default"));
@@ -86,6 +90,7 @@ public class FlashcardListActivity extends AppCompatActivity
                         for (int i = 0; i < size; i++) {
                             menu.getItem(i).setChecked(false);
                         }
+                        setTitle(album.getName());
                         menuItem.setChecked(true);
                         albumId=album.getId();
                         flashcardLayout = (ExpandableListView)findViewById(R.id.listViewFlashcard);
@@ -99,8 +104,6 @@ public class FlashcardListActivity extends AppCompatActivity
             }
 
         }
-
-        menu.getItem(0).setChecked(true);
 
         flashcardLayout = (ExpandableListView)findViewById(R.id.listViewFlashcard);
         flashcardList = db.getAllFashcards(String.valueOf(albumId));

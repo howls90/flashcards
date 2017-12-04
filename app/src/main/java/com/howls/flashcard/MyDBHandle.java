@@ -33,7 +33,7 @@ public class MyDBHandle extends SQLiteOpenHelper {
 
 
     public MyDBHandle(Context context) {
-        super(context, "lang23.db", null, 1);
+        super(context, "lang24.db", null, 1);
     }
 
     @Override
