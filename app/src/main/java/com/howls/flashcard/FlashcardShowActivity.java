@@ -33,9 +33,11 @@ import java.util.List;
 
 public class FlashcardShowActivity extends AppCompatActivity {
 
+    public static final String EXTRA_MESSAGE = "AlbumId";
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-    MyDBHandle db;
+    private MyDBHandle db;
+    private String albumId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,16 +48,14 @@ public class FlashcardShowActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
-        String pos = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
-        Log.i("sasdseeeee",String.valueOf(pos));
-
+        String msn = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
+        String pos = msn.split("/")[0];
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setCurrentItem(Integer.valueOf(pos));
-
     }
 
 
@@ -63,6 +63,14 @@ public class FlashcardShowActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_flashcard_show, menu);
         return true;
+    }
+
+    public String getMyData() {
+        Intent intent = getIntent();
+        String msn = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
+        albumId = msn.split("/")[1];
+
+        return albumId;
     }
 
     @Override
@@ -78,6 +86,7 @@ public class FlashcardShowActivity extends AppCompatActivity {
         }
         if (id == R.id.item_flashcardnew_return) {
             Intent intent = new Intent(this,FlashcardListActivity.class);
+            intent.putExtra(EXTRA_MESSAGE, albumId);
             startActivity(intent);
         }
 
@@ -108,9 +117,11 @@ public class FlashcardShowActivity extends AppCompatActivity {
             setHasOptionsMenu(true);
             View rootView = inflater.inflate(R.layout.fragment_flashcard_show, container, false);
 
-            db = new MyDBHandle(getContext());
+            FlashcardShowActivity activity = (FlashcardShowActivity) getActivity();
+            String albumId = activity.getMyData();
 
-            final List<Flashcard> flashcards = db.getAllFashcards();
+            db = new MyDBHandle(getContext());
+            final List<Flashcard> flashcards = db.getAllFashcards(albumId);
             TextView word = rootView.findViewById(R.id.word);
             TextView read = rootView.findViewById(R.id.read);
             TextView translate = rootView.findViewById(R.id.translate);
@@ -183,6 +194,10 @@ public class FlashcardShowActivity extends AppCompatActivity {
             super(fm);
         }
 
+        Intent intent = getIntent();
+        String msn = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
+        String albumId = msn.split("/")[1];
+
         @Override
         public Fragment getItem(int position) {
             return PlaceholderFragment.newInstance(position);
@@ -191,7 +206,7 @@ public class FlashcardShowActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             db = new MyDBHandle(getApplicationContext());
-            List<Flashcard> flashcardList = db.getAllFashcards();
+            List<Flashcard> flashcardList = db.getAllFashcards(albumId);
 
             return flashcardList.size();
         }

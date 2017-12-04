@@ -28,14 +28,15 @@ import java.util.List;
 public class FlashcardListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String EXTRA_MESSAGE = "com.howls.languagenotes.AlbumId";
-    MyDBHandle db;
+    public static final String EXTRA_MESSAGE = "AlbumId";
+    private MyDBHandle db;
     private ExpandableListView flashcardLayout;
     private FlashcardListAdapter adapter;
     private List<Flashcard> flashcardList;
     private List<Album> albumList;
-    MediaPlayer m;
+    private MediaPlayer m;
     int i = 0;
+    int albumId = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +49,7 @@ public class FlashcardListActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -58,6 +58,13 @@ public class FlashcardListActivity extends AppCompatActivity
         Menu menu = navigationView.getMenu();
 
         db = new MyDBHandle(this);
+
+        Intent intent = getIntent();
+        if (intent.hasExtra("AlbumId")) {
+            albumId = Integer.valueOf(intent.getStringExtra(FlashcardNewActivity.EXTRA_MESSAGE));
+            Album album = db.getAlbum(String.valueOf(albumId));
+            setTitle(album.getName());
+        }
 
         albumList = db.getAllAlbums();
 
@@ -72,6 +79,11 @@ public class FlashcardListActivity extends AppCompatActivity
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         setTitle(album.getName());
+                        albumId=album.getId();
+                        flashcardLayout = (ExpandableListView)findViewById(R.id.listViewFlashcard);
+                        flashcardList = db.getAllFashcards(String.valueOf(albumId));
+                        adapter = new FlashcardListAdapter(getApplicationContext(), flashcardList);
+                        flashcardLayout.setAdapter(adapter);
                         return false;
                     }
                 });
@@ -81,7 +93,7 @@ public class FlashcardListActivity extends AppCompatActivity
 
 
         flashcardLayout = (ExpandableListView)findViewById(R.id.listViewFlashcard);
-        flashcardList = db.getAllFashcards();
+        flashcardList = db.getAllFashcards(String.valueOf(albumId));
         adapter = new FlashcardListAdapter(this, flashcardList);
         flashcardLayout.setAdapter(adapter);
 
@@ -115,9 +127,7 @@ public class FlashcardListActivity extends AppCompatActivity
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
             Intent intent = new Intent(getApplicationContext(), FlashcardShowActivity.class);
-            String flashcardId = v.getTag().toString();
-            Log.i("sasds",String.valueOf(groupPosition));
-            intent.putExtra(EXTRA_MESSAGE, String.valueOf(groupPosition));
+            intent.putExtra(EXTRA_MESSAGE, String.valueOf(groupPosition)+"/"+albumId);
             startActivity(intent);
             return true;
             }
@@ -169,9 +179,7 @@ public class FlashcardListActivity extends AppCompatActivity
         });
 
         alert.setNegativeButton("Return", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // what ever you want to do with No option.
-            }
+            public void onClick(DialogInterface dialog, int whichButton) {}
         });
 
         alert.show();
@@ -209,12 +217,11 @@ public class FlashcardListActivity extends AppCompatActivity
         }
         if (id == R.id.item_add) {
             Intent intent = new Intent(this, FlashcardNewActivity.class);
+            intent.putExtra(EXTRA_MESSAGE, String.valueOf(albumId));
             startActivity(intent);
         }
         if (id == R.id.item_play) {
-
             playAudio(flashcardList.get(0).getSound());
-
         }
 
         return super.onOptionsItemSelected(item);
@@ -223,11 +230,7 @@ public class FlashcardListActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-
         int id = item.getItemId();
-
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

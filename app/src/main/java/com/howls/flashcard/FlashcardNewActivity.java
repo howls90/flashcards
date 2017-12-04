@@ -22,7 +22,7 @@ import java.io.IOException;
 
 public class FlashcardNewActivity extends AppCompatActivity {
 
-    public static final String EXTRA_MESSAGE = "com.howls.languagenotes.AlbumId";
+    public static final String EXTRA_MESSAGE = "AlbumId";
 
     private EditText word, read, translate, examples, notes;
     MyDBHandle db;
@@ -164,10 +164,10 @@ public class FlashcardNewActivity extends AppCompatActivity {
 
         String translateS = translate.getText().toString();
 
-        if (wordS.equals("") || translateS.equals("")) {
-            Toast.makeText(this,"Word form and Translate form must be fullfil", Toast.LENGTH_SHORT).show();
+        if (wordS.equals("") || translateS.equals("") || outputFile == null) {
+            Toast.makeText(this,"Word ,Translate and Sound form must be fullfil", Toast.LENGTH_SHORT).show();
         } else {
-            Flashcard flashcard = new Flashcard(wordS,readS,translateS, outputFile);
+            Flashcard flashcard = new Flashcard(wordS,readS,translateS, outputFile, albumId);
 
             db.addFlashcard(flashcard);
 
