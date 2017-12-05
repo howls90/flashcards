@@ -7,7 +7,7 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,12 +25,12 @@ public class FlashcardNewActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "AlbumId";
 
     private EditText word, read, translate, examples, notes;
-    MyDBHandle db;
+    private MyDBHandle db;
 
-    MediaRecorder myAudioRecord;
+    private MediaRecorder myAudioRecord;
     private String outputFile = null;
     private String albumId;
-    ImageButton play, delete, record;
+    private ImageButton play, delete, record;
 
 
     @Override
@@ -43,9 +43,10 @@ public class FlashcardNewActivity extends AppCompatActivity {
         Intent intent = getIntent();
         albumId = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
 
-        record = (ImageButton)findViewById(R.id.record);
-        play = (ImageButton)findViewById(R.id.play);
-        delete = (ImageButton)findViewById(R.id.delete);
+        record = findViewById(R.id.record);
+        play = findViewById(R.id.play);
+        delete = findViewById(R.id.delete);
+        word = findViewById(R.id.word);
 
         play.setEnabled(false);
         delete.setEnabled(false);
@@ -54,11 +55,20 @@ public class FlashcardNewActivity extends AppCompatActivity {
 
             public boolean onTouch(View v, MotionEvent event) {
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                start();
+                String wordS = word.getText().toString();
+                if (wordS.isEmpty()) {
+                    Toast.makeText(getApplicationContext(),"Introduce Term/Sentence first!", Toast.LENGTH_SHORT).show();
+                } else {
+                    start();
+                }
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                play.setEnabled(true);
-                delete.setEnabled(true);
-                stop();
+                String wordS = word.getText().toString();
+                if (wordS.isEmpty()) {
+                } else {
+                    play.setEnabled(true);
+                    delete.setEnabled(true);
+                    stop();
+                }
             }
             return true;
             }
@@ -105,10 +115,10 @@ public class FlashcardNewActivity extends AppCompatActivity {
 
     public void start() {
 
-        word = (EditText)findViewById(R.id.word);
+
         String wordS = word.getText().toString();
 
-        outputFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/"+wordS+".3gp";
+        outputFile = Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+wordS+".3gp";
 
         myAudioRecord = new MediaRecorder();
         myAudioRecord.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -147,11 +157,11 @@ public class FlashcardNewActivity extends AppCompatActivity {
 
     public void addFlashcard() {
         db = new MyDBHandle(this);
-        word = (EditText)findViewById(R.id.word);
-        read = (EditText)findViewById(R.id.read);
-        translate = (EditText)findViewById(R.id.translate);
-        examples = (EditText)findViewById(R.id.examples);
-        notes = (EditText)findViewById(R.id.notes);
+        word = findViewById(R.id.word);
+        read = findViewById(R.id.read);
+        translate = findViewById(R.id.translate);
+        examples = findViewById(R.id.examples);
+        notes = findViewById(R.id.notes);
 
         String wordS = word.getText().toString();
         String readS = read.getText().toString();
@@ -168,6 +178,8 @@ public class FlashcardNewActivity extends AppCompatActivity {
             Toast.makeText(this,"Word ,Translate and Sound form must be fullfil", Toast.LENGTH_SHORT).show();
         } else {
             Flashcard flashcard = new Flashcard(wordS,readS,translateS, outputFile, albumId);
+            flashcard.setNotes(notesS);
+            flashcard.setExamples(examplesS);
 
             db.addFlashcard(flashcard);
 

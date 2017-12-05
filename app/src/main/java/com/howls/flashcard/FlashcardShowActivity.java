@@ -125,14 +125,19 @@ public class FlashcardShowActivity extends AppCompatActivity {
             TextView word = rootView.findViewById(R.id.word);
             TextView read = rootView.findViewById(R.id.read);
             TextView translate = rootView.findViewById(R.id.translate);
+            TextView examples = rootView.findViewById(R.id.examples);
+            TextView notes = rootView.findViewById(R.id.notes);
             ImageButton play = rootView.findViewById(R.id.play);
             Button delete = rootView.findViewById(R.id.delete);
+
 
             int pos = Integer.parseInt(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             final Flashcard flashcard = flashcards.get(pos);
             word.setText(flashcard.getWord());
             read.setText(flashcard.getRead());
             translate.setText(flashcard.getTranslate());
+            examples.setText(flashcard.getExamples());
+            notes.setText(flashcard.getNotes());
             outputFile = flashcard.getSound();
 
             play.setOnClickListener(new View.OnClickListener()

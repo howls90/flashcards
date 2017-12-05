@@ -8,8 +8,9 @@
 
     <TextView
         android:id="@+id/read"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="35dp"
         android:layout_marginTop="15dp"
         android:text="Read"
         android:textColor="@android:color/darker_gray"
@@ -20,8 +21,9 @@
 
     <TextView
         android:id="@+id/translate"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="35dp"
         android:layout_marginTop="15dp"
         android:paddingBottom="10dp"
         android:text="Translate"

@@ -22,25 +22,24 @@ public class MyDBHandle extends SQLiteOpenHelper {
     private static final String COLUMN_FLASHCARD_TRANSLATE = "translate";
     private static final String COLUMN_FLASHCARD_SOUND = "sound";
     private static final String COLUMN_FLASHCARD_ALBUM = "albumId";
-    //private static final String COLUMN_FLASHCARD_EXAMPLES = "examples";
-    //private static final String COLUMN_FLASHCARD_NOTES = "notes";
+    private static final String COLUMN_FLASHCARD_EXAMPLES = "examples";
+    private static final String COLUMN_FLASHCARD_NOTES = "notes";
 
     private static final String TABLE_ALBUM = "album";
     private static final String COLUMN_ALBUM_NAME = "name";
-    //private static final String COLUMN_ALBUM_NUM = "num";
 
     private String query;
 
 
     public MyDBHandle(Context context) {
-        super(context, "lang24.db", null, 1);
+        super(context, "lang26.db", null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         query = "create table " + TABLE_ALBUM + " (id integer primary key autoincrement, "+COLUMN_ALBUM_NAME+" text)";
         sqLiteDatabase.execSQL(query);
-        query = "create table " + TABLE_FLASHCARD + " (id integer primary key autoincrement, "+COLUMN_FLASHCARD_NAME+" text, "+COLUMN_FLASHCARD_READ+" text, "+COLUMN_FLASHCARD_TRANSLATE+" text, "+COLUMN_FLASHCARD_SOUND+" text, "+COLUMN_FLASHCARD_ALBUM+" integer, FOREIGN KEY("+COLUMN_FLASHCARD_ALBUM+") REFERENCES "+TABLE_ALBUM+"(id) ON DELETE CASCADE)";
+        query = "create table " + TABLE_FLASHCARD + " (id integer primary key autoincrement, "+COLUMN_FLASHCARD_NAME+" text, "+COLUMN_FLASHCARD_READ+" text, "+COLUMN_FLASHCARD_TRANSLATE+" text, "+COLUMN_FLASHCARD_SOUND+" text, "+COLUMN_FLASHCARD_EXAMPLES+" text, "+COLUMN_FLASHCARD_NOTES+" text, "+COLUMN_FLASHCARD_ALBUM+" integer, FOREIGN KEY("+COLUMN_FLASHCARD_ALBUM+") REFERENCES "+TABLE_ALBUM+"(id) ON DELETE CASCADE)";
         sqLiteDatabase.execSQL(query);
     }
 
@@ -60,8 +59,8 @@ public class MyDBHandle extends SQLiteOpenHelper {
         values.put(COLUMN_FLASHCARD_TRANSLATE,flashcard.getTranslate());
         values.put(COLUMN_FLASHCARD_SOUND,flashcard.getSound());
         values.put(COLUMN_FLASHCARD_ALBUM,flashcard.getAlbumId());
-        //values.put(COLUMN_FLASHCARD_EXAMPLES,flashcard.getExamples());
-        //values.put(COLUMN_FLASHCARD_NOTES,flashcard.getNotes());
+        values.put(COLUMN_FLASHCARD_EXAMPLES,flashcard.getExamples());
+        values.put(COLUMN_FLASHCARD_NOTES,flashcard.getNotes());
         SQLiteDatabase db = getWritableDatabase();
         db.insert(TABLE_FLASHCARD,null,values);
         db.close();
@@ -70,7 +69,6 @@ public class MyDBHandle extends SQLiteOpenHelper {
     public void addAlbum(Album album) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_ALBUM_NAME,album.getName());
-        //values.put(COLUMN_ALBUM_NUM, 0);
         SQLiteDatabase db = getWritableDatabase();
         db.insert(TABLE_ALBUM,null,values);
         db.close();
@@ -83,8 +81,10 @@ public class MyDBHandle extends SQLiteOpenHelper {
 
         if (cursor != null)
             cursor.moveToFirst();
-        Flashcard flashcard = new Flashcard(cursor.getString(1), cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5));
+        Flashcard flashcard = new Flashcard(cursor.getString(1), cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(7));
         flashcard.setId(Integer.parseInt(cursor.getString(0)));
+        flashcard.setExamples(cursor.getString(5));
+        flashcard.setNotes(cursor.getString(6));
         db.close();
         return flashcard;
 
@@ -127,8 +127,10 @@ public class MyDBHandle extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                Flashcard flashcard = new Flashcard(cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(5));
+                Flashcard flashcard = new Flashcard(cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(7));
                 flashcard.setId(Integer.parseInt(cursor.getString(0)));
+                flashcard.setExamples(cursor.getString(5));
+                flashcard.setNotes(cursor.getString(6));
                 flashcardList.add(flashcard);
             } while (cursor.moveToNext());
         }

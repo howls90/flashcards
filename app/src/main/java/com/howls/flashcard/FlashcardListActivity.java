@@ -75,7 +75,6 @@ public class FlashcardListActivity extends AppCompatActivity
         }
 
 
-
         if (albumList.size() == 0) {
             db.addAlbum(new Album("Default"));
             finish();
@@ -86,8 +85,7 @@ public class FlashcardListActivity extends AppCompatActivity
                 menu.add(album.getName()).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        int size = menu.size();
-                        for (int i = 0; i < size; i++) {
+                        for (int i = 0; i < menu.size(); i++) {
                             menu.getItem(i).setChecked(false);
                         }
                         setTitle(album.getName());

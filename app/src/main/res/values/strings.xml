@@ -8,11 +8,11 @@
     <string name="title_activity_flashcard_show">FlashcardShowActivity</string>
     <string name="section_format">%1$d</string>
 
-    <string name="word">Write Sentence...</string>
-    <string name="read">Write how to read it ...</string>
-    <string name="translate">Write the translation...</string>
-    <string name="examples">Write an example...</string>
-    <string name="notes">Write notes...</string>
+    <string name="word">Term/Sentence...</string>
+    <string name="read">Lecture ...</string>
+    <string name="translate">Translation...</string>
+    <string name="examples">Examples...</string>
+    <string name="notes">Notes...</string>
     <string name="start">Start</string>
     <string name="stop">Stop</string>
     <string name="play">Play!</string>
