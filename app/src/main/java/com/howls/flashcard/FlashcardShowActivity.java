@@ -38,13 +38,14 @@ public class FlashcardShowActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private MyDBHandle db;
     private String albumId;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flashcard_show);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
@@ -53,7 +54,7 @@ public class FlashcardShowActivity extends AppCompatActivity {
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setCurrentItem(Integer.valueOf(pos));
     }
@@ -73,6 +74,10 @@ public class FlashcardShowActivity extends AppCompatActivity {
         return albumId;
     }
 
+    public void setMyData(int pos) {
+        position = pos;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -82,6 +87,27 @@ public class FlashcardShowActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_delete) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setMessage("Are you sure you want to delete?");
+            alert.setCancelable(false);
+            alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Flashcard flashcard = db.getFlashcard(String.valueOf(position));
+                    File sound = new File(flashcard.getSound());
+                    sound.delete();
+                    db.deleteFlashcard(String.valueOf(flashcard.getId()));
+                    Intent intent = new Intent(getApplicationContext(),FlashcardListActivity.class);
+                    startActivity(intent);
+                }
+            });
+            alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+            alert.create().show();
 
         }
         if (id == R.id.item_flashcardnew_return) {
@@ -128,11 +154,10 @@ public class FlashcardShowActivity extends AppCompatActivity {
             TextView examples = rootView.findViewById(R.id.examples);
             TextView notes = rootView.findViewById(R.id.notes);
             ImageButton play = rootView.findViewById(R.id.play);
-            Button delete = rootView.findViewById(R.id.delete);
-
 
             int pos = Integer.parseInt(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             final Flashcard flashcard = flashcards.get(pos);
+            activity.setMyData(flashcard.getId());
             word.setText(flashcard.getWord());
             read.setText(flashcard.getRead());
             translate.setText(flashcard.getTranslate());
@@ -157,35 +182,6 @@ public class FlashcardShowActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(getContext(), "Not recording", Toast.LENGTH_SHORT).show();
                     }
-                }
-            });
-
-            delete.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                    alert.setMessage("Are you sure you want to delete?");
-                    alert.setCancelable(false);
-                    alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            File sound = new File(flashcard.getSound());
-                            sound.delete();
-                            db.deleteFlashcard(String.valueOf(flashcard.getId()));
-                            Intent intent = new Intent(getContext(),FlashcardListActivity.class);
-                            startActivity(intent);
-                        }
-                    });
-                    alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                        }
-                    });
-                    alert.create().show();
-
                 }
             });
 
