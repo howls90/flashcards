@@ -48,15 +48,15 @@ public class FlashcardListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_flashcard_list);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         menu = navigationView.getMenu();
@@ -71,7 +71,8 @@ public class FlashcardListActivity extends AppCompatActivity
         } else {
             for (i=0;i<albumList.size();i++) {
                 final Album album =  albumList.get(i);
-                menu.add(album.getName()).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                flashcardList = db.getAllFashcards(String.valueOf(album.getId()));
+                menu.add(album.getName()+" ("+flashcardList.size()+")").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         for (int i = 0; i < menu.size(); i++) {
