@@ -64,17 +64,6 @@ public class FlashcardListActivity extends AppCompatActivity
         db = new MyDBHandle(this);
         albumList = db.getAllAlbums();
 
-        Intent intent = getIntent();
-        if (intent.hasExtra("AlbumId")) {
-            albumId = Integer.valueOf(intent.getStringExtra(FlashcardNewActivity.EXTRA_MESSAGE));
-            setTitle(db.getAlbum(String.valueOf(albumId)).getName());
-            //menu.getItem(albumList.indexOf(db.getAlbum(String.valueOf(albumId)))).setChecked(true);
-        } else {
-            setTitle("Default");
-            //menu.getItem(0).setChecked(true);
-        }
-
-
         if (albumList.size() == 0) {
             db.addAlbum(new Album("Default"));
             finish();
@@ -91,19 +80,31 @@ public class FlashcardListActivity extends AppCompatActivity
                         setTitle(album.getName());
                         menuItem.setChecked(true);
                         albumId=album.getId();
-                        flashcardLayout = (ExpandableListView)findViewById(R.id.listViewFlashcard);
+                        flashcardLayout = findViewById(R.id.listViewFlashcard);
                         flashcardList = db.getAllFashcards(String.valueOf(albumId));
                         adapter = new FlashcardListAdapter(getApplicationContext(), flashcardList);
                         flashcardLayout.setAdapter(adapter);
                         return false;
                     }
                 });
-
             }
-
         }
 
-        flashcardLayout = (ExpandableListView)findViewById(R.id.listViewFlashcard);
+        Intent intent = getIntent();
+        if (intent.hasExtra("AlbumId")) {
+            albumId = Integer.valueOf(intent.getStringExtra(FlashcardNewActivity.EXTRA_MESSAGE));
+            setTitle(db.getAlbum(String.valueOf(albumId)).getName());
+            for (int i =0;i<albumList.size();i++) {
+                if (albumList.get(i).getId() == albumId) {
+                    menu.getItem(i).setChecked(true);
+                }
+            }
+        } else {
+            setTitle("Default");
+            menu.getItem(0).setChecked(true);
+        }
+
+        flashcardLayout = findViewById(R.id.listViewFlashcard);
         flashcardList = db.getAllFashcards(String.valueOf(albumId));
         adapter = new FlashcardListAdapter(this, flashcardList);
         flashcardLayout.setAdapter(adapter);
