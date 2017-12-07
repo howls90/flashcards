@@ -38,7 +38,7 @@ public class FlashcardShowActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private MyDBHandle db;
     private String albumId;
-    private int position;
+    private Flashcard actual_flashcard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +74,8 @@ public class FlashcardShowActivity extends AppCompatActivity {
         return albumId;
     }
 
-    public void setMyData(int pos) {
-        position = pos;
+    public void setMyData(Flashcard flashcard) {
+        actual_flashcard = flashcard;
     }
 
     @Override
@@ -93,11 +93,11 @@ public class FlashcardShowActivity extends AppCompatActivity {
             alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    Flashcard flashcard = db.getFlashcard(String.valueOf(position));
-                    File sound = new File(flashcard.getSound());
+                    File sound = new File(actual_flashcard.getSound());
                     sound.delete();
-                    db.deleteFlashcard(String.valueOf(flashcard.getId()));
+                    db.deleteFlashcard(String.valueOf(actual_flashcard.getId()));
                     Intent intent = new Intent(getApplicationContext(),FlashcardListActivity.class);
+                    intent.putExtra(EXTRA_MESSAGE, albumId);
                     startActivity(intent);
                 }
             });
@@ -157,7 +157,7 @@ public class FlashcardShowActivity extends AppCompatActivity {
 
             int pos = Integer.parseInt(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             final Flashcard flashcard = flashcards.get(pos);
-            activity.setMyData(flashcard.getId());
+            activity.setMyData(flashcard);
             word.setText(flashcard.getWord());
             read.setText(flashcard.getRead());
             translate.setText(flashcard.getTranslate());
