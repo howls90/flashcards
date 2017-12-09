@@ -49,14 +49,15 @@ public class FlashcardShowActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
-        String msn = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
-        String pos = msn.split("/")[0];
+        String pos = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE).split("/")[0];
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setCurrentItem(Integer.valueOf(pos));
+
+        Log.i("aaaaa","");
     }
 
 
@@ -72,10 +73,6 @@ public class FlashcardShowActivity extends AppCompatActivity {
         albumId = msn.split("/")[1];
 
         return albumId;
-    }
-
-    public void setMyData(Flashcard flashcard) {
-        actual_flashcard = flashcard;
     }
 
     @Override
@@ -123,6 +120,7 @@ public class FlashcardShowActivity extends AppCompatActivity {
 
         MyDBHandle db;
         String outputFile;
+        String albumId;
 
         private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -144,7 +142,7 @@ public class FlashcardShowActivity extends AppCompatActivity {
             View rootView = inflater.inflate(R.layout.fragment_flashcard_show, container, false);
 
             FlashcardShowActivity activity = (FlashcardShowActivity) getActivity();
-            String albumId = activity.getMyData();
+            albumId = activity.getMyData();
 
             db = new MyDBHandle(getContext());
             final List<Flashcard> flashcards = db.getAllFashcards(albumId);
@@ -154,10 +152,10 @@ public class FlashcardShowActivity extends AppCompatActivity {
             TextView examples = rootView.findViewById(R.id.examples);
             TextView notes = rootView.findViewById(R.id.notes);
             ImageButton play = rootView.findViewById(R.id.play);
+            ImageButton delete = rootView.findViewById(R.id.delete);
 
             int pos = Integer.parseInt(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             final Flashcard flashcard = flashcards.get(pos);
-            activity.setMyData(flashcard);
             word.setText(flashcard.getWord());
             read.setText(flashcard.getRead());
             translate.setText(flashcard.getTranslate());
@@ -185,6 +183,33 @@ public class FlashcardShowActivity extends AppCompatActivity {
                 }
             });
 
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                    alert.setMessage("Are you sure you want to delete?");
+                    alert.setCancelable(false);
+                    alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            File sound = new File(flashcard.getSound());
+                            sound.delete();
+                            db.deleteFlashcard(String.valueOf(flashcard.getId()));
+                            Intent intent = new Intent(getContext(),FlashcardListActivity.class);
+                            intent.putExtra(EXTRA_MESSAGE, albumId);
+                            startActivity(intent);
+                        }
+                    });
+                    alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+                    alert.create().show();
+                }
+            });
+
             return rootView;
         }
     }
@@ -208,7 +233,6 @@ public class FlashcardShowActivity extends AppCompatActivity {
         public int getCount() {
             db = new MyDBHandle(getApplicationContext());
             List<Flashcard> flashcardList = db.getAllFashcards(albumId);
-
             return flashcardList.size();
         }
     }
