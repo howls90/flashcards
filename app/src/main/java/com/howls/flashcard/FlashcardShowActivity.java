@@ -38,7 +38,6 @@ public class FlashcardShowActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private MyDBHandle db;
     private String albumId;
-    private Flashcard actual_flashcard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +55,6 @@ public class FlashcardShowActivity extends AppCompatActivity {
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setCurrentItem(Integer.valueOf(pos));
-
-        Log.i("aaaaa","");
     }
 
 

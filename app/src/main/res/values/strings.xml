@@ -6,6 +6,7 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_flashcard_show">FlashcardShowActivity</string>
+    <string name="title_activity_flashcard_quiz">FlashcardQuizActivity</string>
     <string name="section_format">%1$d</string>
 
     <string name="word"></string>

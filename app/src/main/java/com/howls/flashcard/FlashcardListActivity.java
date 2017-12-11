@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -254,6 +255,16 @@ public class FlashcardListActivity extends AppCompatActivity
             Intent intent = new Intent(this, FlashcardNewActivity.class);
             intent.putExtra(EXTRA_MESSAGE, String.valueOf(albumId));
             startActivity(intent);
+        }
+        if (id == R.id.action_quiz) {
+            if (flashcardList.size() >= 3) {
+                Intent intent = new Intent(this, FlashcardQuizActivity.class);
+                intent.putExtra(EXTRA_MESSAGE, String.valueOf(albumId));
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Not enought flashcards to play", Toast.LENGTH_SHORT).show();
+            }
+
         }
         if (id == R.id.item_play) {
             playAudio(flashcardList.get(0).getSound());
