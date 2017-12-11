@@ -1,28 +1,22 @@
 package com.howls.flashcard;
 
-import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class FlashcardShowActivity extends AppCompatActivity {
+public class FlashcardQuizActivity extends AppCompatActivity {
 
     public static final String EXTRA_MESSAGE = "AlbumId";
     private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -83,10 +77,28 @@ public class FlashcardShowActivity extends AppCompatActivity {
         if (id == R.id.action_edit) {
             return true;
         }
-        if (id == R.id.action_quiz) {
-            return true;
-        }
         if (id == R.id.action_delete) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setMessage("Are you sure you want to delete?");
+            alert.setCancelable(false);
+            alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    File sound = new File(actual_flashcard.getSound());
+                    sound.delete();
+                    db.deleteFlashcard(String.valueOf(actual_flashcard.getId()));
+                    Intent intent = new Intent(getApplicationContext(),FlashcardListActivity.class);
+                    intent.putExtra(EXTRA_MESSAGE, albumId);
+                    startActivity(intent);
+                }
+            });
+            alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+            alert.create().show();
 
         }
         if (id == R.id.item_flashcardnew_return) {
@@ -123,7 +135,7 @@ public class FlashcardShowActivity extends AppCompatActivity {
             setHasOptionsMenu(true);
             View rootView = inflater.inflate(R.layout.fragment_flashcard_show, container, false);
 
-            FlashcardShowActivity activity = (FlashcardShowActivity) getActivity();
+            FlashcardQuizActivity activity = (FlashcardQuizActivity) getActivity();
             albumId = activity.getMyData();
 
             db = new MyDBHandle(getContext());

@@ -9,6 +9,11 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_quiz"
+        android:orderInCategory="100"
+        android:title="Quiz"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_edit"
         android:orderInCategory="100"
         android:title="Edit"

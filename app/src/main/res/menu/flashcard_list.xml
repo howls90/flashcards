@@ -17,16 +17,17 @@
     <item
         android:id="@+id/item_game"
         android:title="Change Order"
-        android:icon="@drawable/ic_gamepad_white_24dp"
         app:showAsAction="never"/>
     <item
         android:id="@+id/item_play"
         android:title="PlayList"
-        android:icon="@drawable/ic_play_arrow_white_24dp"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_quiz"
+        android:title="Quiz"
+        app:showAsAction="never" />
     <item
         android:id="@+id/item_album_delete"
         android:title="Delete Album"
-        android:icon="@drawable/ic_play_arrow_white_24dp"
         app:showAsAction="never"/>
 </menu>
