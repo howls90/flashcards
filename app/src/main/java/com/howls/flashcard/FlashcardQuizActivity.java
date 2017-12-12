@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +35,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import io.netopen.hotbitmapgg.library.view.RingProgressBar;
+
 public class FlashcardQuizActivity extends AppCompatActivity {
 
     public static final String EXTRA_MESSAGE = "AlbumId";
@@ -39,25 +44,22 @@ public class FlashcardQuizActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private MyDBHandle db;
     private String albumId;
-    private Flashcard actual_flashcard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flashcard_show);
-        setTitle("Quiz");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Intent intent = getIntent();
-        String pos = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE).split("/")[0];
-
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        Intent intent = getIntent();
+        albumId = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
 
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setCurrentItem(Integer.valueOf(pos));
     }
 
 
@@ -70,9 +72,7 @@ public class FlashcardQuizActivity extends AppCompatActivity {
     public String getMyData() {
         Intent intent = getIntent();
         String msn = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
-        albumId = msn;
-
-        return albumId;
+        return msn;
     }
 
     @Override
@@ -84,28 +84,6 @@ public class FlashcardQuizActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_delete) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setMessage("Are you sure you want to delete?");
-            alert.setCancelable(false);
-            alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    File sound = new File(actual_flashcard.getSound());
-                    sound.delete();
-                    db.deleteFlashcard(String.valueOf(actual_flashcard.getId()));
-                    Intent intent = new Intent(getApplicationContext(),FlashcardListActivity.class);
-                    intent.putExtra(EXTRA_MESSAGE, albumId);
-                    startActivity(intent);
-                }
-            });
-            alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-
-                }
-            });
-            alert.create().show();
-
         }
         if (id == R.id.item_flashcardnew_return) {
             Intent intent = new Intent(this,FlashcardListActivity.class);
@@ -150,8 +128,6 @@ public class FlashcardQuizActivity extends AppCompatActivity {
             int pos = Integer.parseInt(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             final Flashcard flashcard = flashcards.get(pos);
 
-            outputFile = flashcard.getSound();
-
             final List<Flashcard> flashcards_options = flashcards;
             flashcards_options.remove(pos);
 
@@ -159,15 +135,17 @@ public class FlashcardQuizActivity extends AppCompatActivity {
             final Button option2 = rootView.findViewById(R.id.option2);
             final Button option3 = rootView.findViewById(R.id.option3);
 
+            final RingProgressBar progress = rootView.findViewById(R.id.progress);
+
             Random rand = new Random();
             int num = rand.nextInt((3 - 1) + 1) + 1;
 
             if (num == 1) {
                 option1.setText(flashcard.getTranslate());
 
-                int val = rand.nextInt((flashcards_options.size() - 0));
+                int val = rand.nextInt((flashcards_options.size()));
                 option2.setText(flashcards_options.get(val).getTranslate());
-                int val1 = rand.nextInt((flashcards_options.size() - 0));
+                int val1 = rand.nextInt((flashcards_options.size()));
                 option3.setText(flashcards_options.get(val1).getTranslate());
 
                 option1.setOnClickListener(new View.OnClickListener()
@@ -200,9 +178,9 @@ public class FlashcardQuizActivity extends AppCompatActivity {
             }
             if (num == 2) {
                 option2.setText(flashcard.getTranslate());
-                int val = rand.nextInt((flashcards_options.size() - 0));
+                int val = rand.nextInt((flashcards_options.size()));
                 option1.setText(flashcards_options.get(val).getTranslate());
-                int val1 = rand.nextInt((flashcards_options.size() - 0));
+                int val1 = rand.nextInt((flashcards_options.size()));
                 option3.setText(flashcards_options.get(val1).getTranslate());
 
                 option2.setOnClickListener(new View.OnClickListener()
@@ -235,9 +213,9 @@ public class FlashcardQuizActivity extends AppCompatActivity {
             }
             if (num == 3) {
                 option3.setText(flashcard.getTranslate());
-                int val = rand.nextInt((flashcards_options.size() - 0));
+                int val = rand.nextInt((flashcards_options.size()));
                 option2.setText(flashcards_options.get(val).getTranslate());
-                int val1 = rand.nextInt((flashcards_options.size() - 0));
+                int val1 = rand.nextInt((flashcards_options.size()));
                 option1.setText(flashcards_options.get(val1).getTranslate());
 
                 option3.setOnClickListener(new View.OnClickListener()
@@ -277,18 +255,21 @@ public class FlashcardQuizActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v)
                 {
-                    if (outputFile != null) {
-                        try {
-                            MediaPlayer m = new MediaPlayer();
-                            m.setDataSource(flashcard.getSound());
-                            m.prepare();
-                            m.start();
+                    final int duration = flashcard.sound();
 
-                            Toast.makeText(getContext(), "Playing Audio", Toast.LENGTH_SHORT).show();
-                        } catch (IOException e) {}
-                    } else {
-                        Toast.makeText(getContext(), "Not recording", Toast.LENGTH_SHORT).show();
-                    }
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for(int i=0;i<=100;i++) {
+                                try{
+                                    Thread.sleep(duration/100);
+                                    progress.setProgress(i);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }).start();
                 }
             });
 

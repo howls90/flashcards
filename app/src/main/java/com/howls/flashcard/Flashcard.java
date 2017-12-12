@@ -1,5 +1,11 @@
 package com.howls.flashcard;
 
+import android.media.MediaPlayer;
+import android.util.Log;
+import android.widget.Toast;
+
+import java.io.IOException;
+
 /**
  * Created by howls on 17/11/23. sadadad
  */
@@ -7,6 +13,7 @@ package com.howls.flashcard;
 public class Flashcard {
     private int id;
     private String word, read,translate,sound, albumId, examples, notes;
+    private MediaPlayer m;
 
     public Flashcard(String word, String read, String translate, String sound, String albumId) {
         this.word = word;
@@ -61,4 +68,19 @@ public class Flashcard {
     public String getNotes() {return notes;}
 
     public void setNotes(String notes) {this.notes = notes;}
+
+    public int sound() {
+        int duration = 0;
+        if (this.sound != null) {
+            try {
+                m = new MediaPlayer();
+                m.setDataSource(this.sound);
+                m.prepare();
+                 duration = m.getDuration();
+                m.start();
+            } catch (IOException e) {
+            }
+        }
+        return duration;
+    }
 }
