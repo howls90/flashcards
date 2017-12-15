@@ -31,6 +31,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import io.netopen.hotbitmapgg.library.view.RingProgressBar;
+
 public class FlashcardShowActivity extends AppCompatActivity {
 
     public static final String EXTRA_MESSAGE = "AlbumId";
@@ -126,7 +128,7 @@ public class FlashcardShowActivity extends AppCompatActivity {
             db = new MyDBHandle(getContext());
             final List<Flashcard> flashcards = db.getAllFashcards(albumId);
             TextView word = rootView.findViewById(R.id.word);
-            TextView read = rootView.findViewById(R.id.read);
+            //TextView read = rootView.findViewById(R.id.read);
             TextView translate = rootView.findViewById(R.id.translate);
             TextView examples = rootView.findViewById(R.id.examples);
             TextView notes = rootView.findViewById(R.id.notes);
@@ -135,8 +137,9 @@ public class FlashcardShowActivity extends AppCompatActivity {
 
             int pos = Integer.parseInt(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             final Flashcard flashcard = flashcards.get(pos);
+            final RingProgressBar progress = rootView.findViewById(R.id.progress);
             word.setText(flashcard.getWord());
-            read.setText(flashcard.getRead());
+            //read.setText(flashcard.getRead());
             translate.setText(flashcard.getTranslate());
             examples.setText(flashcard.getExamples());
             notes.setText(flashcard.getNotes());
@@ -147,18 +150,21 @@ public class FlashcardShowActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v)
                 {
-                    if (outputFile != null) {
-                        try {
-                            MediaPlayer m = new MediaPlayer();
-                            m.setDataSource(flashcard.getSound());
-                            m.prepare();
-                            m.start();
+                    final int duration = flashcard.sound();
 
-                            Toast.makeText(getContext(), "Playing Audio", Toast.LENGTH_SHORT).show();
-                        } catch (IOException e) {}
-                    } else {
-                        Toast.makeText(getContext(), "Not recording", Toast.LENGTH_SHORT).show();
-                    }
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for(int i=0;i<=100;i++) {
+                                try{
+                                    Thread.sleep(duration/100);
+                                    progress.setProgress(i);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }).start();
                 }
             });
 

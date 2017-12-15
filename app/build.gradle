@@ -28,4 +28,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
     compile 'com.github.HotBitmapGG:RingProgressBar:V1.2.2'
+    compile 'com.jcminarro:RoundKornerLayouts:0.2.0'
+    compile 'com.wajahatkarim3.EasyFlipView:EasyFlipView:1.0.0'
 }
