@@ -18,6 +18,12 @@ android {
     }
 }
 
+android {
+    lintOptions {
+        abortOnError false
+    }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:26.1.0'
@@ -27,7 +33,10 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
+    // Libraries
     compile 'com.github.HotBitmapGG:RingProgressBar:V1.2.2'
-    compile 'com.jcminarro:RoundKornerLayouts:0.2.0'
     compile 'com.wajahatkarim3.EasyFlipView:EasyFlipView:1.0.0'
+    compile 'com.huxq17.android:SwipeCardsView:1.3.4'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:cardview-v7:26.1.0'
 }

@@ -258,7 +258,7 @@ public class FlashcardListActivity extends AppCompatActivity
         }
         if (id == R.id.action_quiz) {
             if (flashcardList.size() >= 3) {
-                Intent intent = new Intent(this, FlashcardQuizActivity.class);
+                Intent intent = new Intent(this, ShowActivity.class);
                 intent.putExtra(EXTRA_MESSAGE, String.valueOf(albumId));
                 startActivity(intent);
             } else {
