@@ -31,7 +31,6 @@
             android:name=".FlashcardQuizActivity"
             android:label="@string/title_activity_flashcard_quiz"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ShowActivity"></activity>
     </application>
 
 </manifest>

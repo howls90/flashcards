@@ -35,10 +35,10 @@ import io.netopen.hotbitmapgg.library.view.RingProgressBar;
 
 public class FlashcardShowActivity extends AppCompatActivity {
 
-    public static final String EXTRA_MESSAGE = "AlbumId";
+    private static final String EXTRA_MESSAGE = "AlbumId";
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-    private MyDBHandle db;
+    private MyDBHandle db = new MyDBHandle(this);
     private String albumId;
 
     @Override
@@ -49,8 +49,11 @@ public class FlashcardShowActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Intent intent = getIntent();
-        String pos = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE).split("/")[0];
+        String msn = getIntent().getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
+        String pos = msn.split("/")[0];
+        albumId = msn.split("/")[1];
+
+        this.setTitle(db.getAlbum(albumId).getName());
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
@@ -128,7 +131,6 @@ public class FlashcardShowActivity extends AppCompatActivity {
             db = new MyDBHandle(getContext());
             final List<Flashcard> flashcards = db.getAllFashcards(albumId);
             TextView word = rootView.findViewById(R.id.word);
-            //TextView read = rootView.findViewById(R.id.read);
             TextView translate = rootView.findViewById(R.id.translate);
             TextView examples = rootView.findViewById(R.id.examples);
             TextView notes = rootView.findViewById(R.id.notes);
@@ -139,7 +141,6 @@ public class FlashcardShowActivity extends AppCompatActivity {
             final Flashcard flashcard = flashcards.get(pos);
             final RingProgressBar progress = rootView.findViewById(R.id.progress);
             word.setText(flashcard.getWord());
-            //read.setText(flashcard.getRead());
             translate.setText(flashcard.getTranslate());
             examples.setText(flashcard.getExamples());
             notes.setText(flashcard.getNotes());
@@ -205,8 +206,7 @@ public class FlashcardShowActivity extends AppCompatActivity {
             super(fm);
         }
 
-        Intent intent = getIntent();
-        String msn = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
+        String msn = getIntent().getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
         String albumId = msn.split("/")[1];
 
         @Override

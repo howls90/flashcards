@@ -17,10 +17,10 @@
         app:flipDuration="400">
 
         <!-- Back Layout Goes Here -->
-        <include layout="@layout/flash_card_layout_back"/>
+        <include layout="@layout/flashcard_layout_back"/>
 
         <!-- Front Layout Goes Here -->
-        <include layout="@layout/flash_card_layout_front"/>
+        <include layout="@layout/flashcard_layout_front"/>
 
     </com.wajahatkarim3.easyflipview.EasyFlipView>
 

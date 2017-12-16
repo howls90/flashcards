@@ -4,10 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,18 +14,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class FlashcardListActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -258,7 +251,7 @@ public class FlashcardListActivity extends AppCompatActivity
         }
         if (id == R.id.action_quiz) {
             if (flashcardList.size() >= 3) {
-                Intent intent = new Intent(this, ShowActivity.class);
+                Intent intent = new Intent(this, FlashcardQuizActivity.class);
                 intent.putExtra(EXTRA_MESSAGE, String.valueOf(albumId));
                 startActivity(intent);
             } else {
@@ -282,8 +275,7 @@ public class FlashcardListActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
