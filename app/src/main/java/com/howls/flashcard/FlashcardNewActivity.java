@@ -158,19 +158,14 @@ public class FlashcardNewActivity extends AppCompatActivity {
     public void addFlashcard() {
         db = new MyDBHandle(this);
         word = findViewById(R.id.word);
-        read = findViewById(R.id.read);
         translate = findViewById(R.id.translate);
         examples = findViewById(R.id.examples);
         notes = findViewById(R.id.notes);
 
         String wordS = word.getText().toString();
-        String readS = read.getText().toString();
+        String readS = wordS;
         String examplesS = examples.getText().toString();
         String notesS = notes.getText().toString();
-
-        if (TextUtils.isEmpty(readS)) {
-            readS = wordS;
-        }
 
         String translateS = translate.getText().toString();
 
