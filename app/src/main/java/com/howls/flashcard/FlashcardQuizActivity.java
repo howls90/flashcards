@@ -42,7 +42,7 @@ public class FlashcardQuizActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "AlbumId";
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-    private MyDBHandle db;
+    private MyDBHandle db = new MyDBHandle(this);
     private String albumId;
 
     @Override
@@ -55,8 +55,9 @@ public class FlashcardQuizActivity extends AppCompatActivity {
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        Intent intent = getIntent();
-        albumId = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
+        albumId = getIntent().getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
+
+        getSupportActionBar().setTitle(db.getAlbum(albumId).getName());
 
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -248,7 +249,6 @@ public class FlashcardQuizActivity extends AppCompatActivity {
             }
 
             ImageButton play = rootView.findViewById(R.id.play);
-            Button hint = rootView.findViewById(R.id.hint);
 
             play.setOnClickListener(new View.OnClickListener()
             {
@@ -273,15 +273,10 @@ public class FlashcardQuizActivity extends AppCompatActivity {
                 }
             });
 
-            hint.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    TextView term = rootView.findViewById(R.id.term);
-                    term.setText(flashcard.getWord());
-                }
-            });
+
+            TextView term = rootView.findViewById(R.id.term);
+            term.setText(flashcard.getWord());
+
 
             return rootView;
         }

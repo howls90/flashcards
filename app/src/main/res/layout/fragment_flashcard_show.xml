@@ -4,7 +4,7 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1e1e1e"
+    android:background="#dedddd"
     android:padding="16dp"
     tools:context="com.howls.flashcard.FlashcardShowActivity$PlaceholderFragment">
 

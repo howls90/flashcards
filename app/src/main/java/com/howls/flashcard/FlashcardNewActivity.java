@@ -25,7 +25,7 @@ public class FlashcardNewActivity extends AppCompatActivity {
     public static final String EXTRA_MESSAGE = "AlbumId";
 
     private EditText word, read, translate, examples, notes;
-    private MyDBHandle db;
+    private MyDBHandle db = new MyDBHandle(this);;
 
     private MediaRecorder myAudioRecord;
     private String outputFile = null;
@@ -38,10 +38,8 @@ public class FlashcardNewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flashcard_new);
 
-        setTitle("Create new Flashcard");
-
-        Intent intent = getIntent();
-        albumId = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
+        albumId = getIntent().getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
+        setTitle(db.getAlbum(albumId).getName());
 
         record = findViewById(R.id.record);
         play = findViewById(R.id.play);
@@ -156,7 +154,6 @@ public class FlashcardNewActivity extends AppCompatActivity {
     }
 
     public void addFlashcard() {
-        db = new MyDBHandle(this);
         word = findViewById(R.id.word);
         translate = findViewById(R.id.translate);
         examples = findViewById(R.id.examples);

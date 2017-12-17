@@ -4,18 +4,29 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="20dp"
     tools:context="com.howls.flashcard.FlashcardShowActivity$PlaceholderFragment">
 
-    <ImageButton
-        android:id="@+id/play"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/play_button"
-        android:src="@drawable/ic_play_arrow_white_36dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <com.wajahatkarim3.easyflipview.EasyFlipView
+        android:id="@+id/flip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:flipDuration="400"
+        app:flipEnabled="true"
+        app:flipOnTouch="true"
+        tools:layout_editor_absoluteX="16dp">
+
+        <!-- Back Layout Goes Here -->
+        <include layout="@layout/flashcard_quiz_back" />
+
+        <!-- Front Layout Goes Here -->
+        <include layout="@layout/flashcard_quiz_front" />
+
+
+    </com.wajahatkarim3.easyflipview.EasyFlipView>
+
+
 
     <Button
         android:id="@+id/option1"
@@ -32,7 +43,7 @@
         android:textSize="18sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/term" />
+        app:layout_constraintTop_toBottomOf="@+id/flip" />
 
     <Button
         android:id="@+id/option2"
@@ -68,39 +79,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/option2" />
 
-    <TextView
-        android:id="@+id/term"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="18sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/hint" />
 
-    <Button
-        android:id="@+id/hint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Hint"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/play" />
 
-    <io.netopen.hotbitmapgg.library.view.RingProgressBar
-        android:id="@+id/progress"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:max="100"
-        app:ringColor="@color/colorChild"
-        app:ringProgressColor="@color/play"
-        app:ringWidth="3dp"
-        app:style="STROKE"
-        app:textIsShow="false" />
 
 </android.support.constraint.ConstraintLayout>

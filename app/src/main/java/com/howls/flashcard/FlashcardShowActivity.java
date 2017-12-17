@@ -53,7 +53,7 @@ public class FlashcardShowActivity extends AppCompatActivity {
         String pos = msn.split("/")[0];
         albumId = msn.split("/")[1];
 
-        this.setTitle(db.getAlbum(albumId).getName());
+        getSupportActionBar().setTitle(db.getAlbum(albumId).getName());
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
