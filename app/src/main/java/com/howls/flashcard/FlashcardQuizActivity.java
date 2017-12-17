@@ -97,7 +97,7 @@ public class FlashcardQuizActivity extends AppCompatActivity {
 
     public static class PlaceholderFragment extends Fragment {
 
-        MyDBHandle db;
+        MyDBHandle db = new MyDBHandle(getContext());
         String outputFile;
         String albumId;
 
@@ -298,7 +298,6 @@ public class FlashcardQuizActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            db = new MyDBHandle(getApplicationContext());
             List<Flashcard> flashcardList = db.getAllFashcards(albumId);
             return flashcardList.size();
         }
