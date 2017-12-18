@@ -20,13 +20,15 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 
+import io.netopen.hotbitmapgg.library.view.RingProgressBar;
+
 public class FlashcardNewActivity extends AppCompatActivity {
 
     public static final String EXTRA_MESSAGE = "AlbumId";
 
-    private EditText word, read, translate, examples, notes;
+    private EditText word, translate, examples, notes;
     private MyDBHandle db = new MyDBHandle(this);;
-
+    private RingProgressBar progress;
     private MediaRecorder myAudioRecord;
     private String outputFile = null;
     private String albumId;
@@ -45,6 +47,7 @@ public class FlashcardNewActivity extends AppCompatActivity {
         play = findViewById(R.id.play);
         delete = findViewById(R.id.delete);
         word = findViewById(R.id.word);
+        progress = findViewById(R.id.progress);
 
         play.setEnabled(false);
         delete.setEnabled(false);
@@ -145,12 +148,26 @@ public class FlashcardNewActivity extends AppCompatActivity {
     }
 
     public void play(View v) throws IOException{
-        MediaPlayer m = new MediaPlayer();
+        MediaPlayer m;
+        m = new MediaPlayer();
         m.setDataSource(outputFile);
         m.prepare();
+        final int duration = m.getDuration();
         m.start();
 
-        Toast.makeText(this,"Playing Audio", Toast.LENGTH_SHORT).show();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for(int i=0;i<=100;i++) {
+                    try{
+                        Thread.sleep(duration/100);
+                        progress.setProgress(i);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 
     public void addFlashcard() {

@@ -81,11 +81,6 @@ public class FlashcardQuizActivity extends AppCompatActivity {
 
         int id = item.getItemId();
 
-        if (id == R.id.action_edit) {
-            return true;
-        }
-        if (id == R.id.action_delete) {
-        }
         if (id == R.id.item_flashcardnew_return) {
             Intent intent = new Intent(this,FlashcardListActivity.class);
             intent.putExtra(EXTRA_MESSAGE, albumId);

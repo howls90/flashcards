@@ -90,6 +90,21 @@
                 app:layout_constraintStart_toEndOf="@+id/record"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <io.netopen.hotbitmapgg.library.view.RingProgressBar
+                android:id="@+id/progress"
+                android:layout_width="50dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_height="50dp"
+                app:layout_constraintStart_toEndOf="@+id/record"
+                app:layout_constraintTop_toTopOf="parent"
+                app:max="100"
+                app:ringColor="@color/colorChild"
+                app:ringProgressColor="@color/play"
+                app:ringWidth="3dp"
+                app:style="STROKE"
+                app:textIsShow="false" />
+
             <ImageButton
                 android:id="@+id/delete"
                 android:layout_width="50dp"

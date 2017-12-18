@@ -19,6 +19,8 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 
+import io.netopen.hotbitmapgg.library.view.RingProgressBar;
+
 public class FlashcardEditActivity extends AppCompatActivity {
 
     public static final String EXTRA_MESSAGE = "AlbumId";
@@ -27,9 +29,11 @@ public class FlashcardEditActivity extends AppCompatActivity {
     private MyDBHandle db = new MyDBHandle(this);
 
     private MediaRecorder myAudioRecord;
-    private String outputFile = null;
+    private String outputFile;
     private String albumId, flashcardID;
     private ImageButton play, delete, record;
+    private Flashcard flashcard;
+    private RingProgressBar progress;
 
 
 
@@ -38,31 +42,32 @@ public class FlashcardEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flashcard_new);
 
-        //albumId = getIntent().getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
         flashcardID = getIntent().getStringExtra(FlashcardShowActivity.EXTRA_MESSAGE2);
 
-        Flashcard flashcard = db.getFlashcard(flashcardID);
+        flashcard = db.getFlashcard(flashcardID);
         albumId = flashcard.getAlbumId();
 
-        setTitle(db.getAlbum(flashcard.getAlbumId()).getName());
+        setTitle("Edit");
 
         word = findViewById(R.id.word);
         translate = findViewById(R.id.translate);
         examples =findViewById(R.id.examples);
         notes = findViewById(R.id.notes);
+        progress = findViewById(R.id.progress);
 
         word.setText(flashcard.getWord());
         translate.setText(flashcard.getTranslate());
         examples.setText(flashcard.getExamples());
         notes.setText(flashcard.getNotes());
+        outputFile = flashcard.getSound();
 
         record = findViewById(R.id.record);
         play = findViewById(R.id.play);
         delete = findViewById(R.id.delete);
         word = findViewById(R.id.word);
 
-        play.setEnabled(false);
-        delete.setEnabled(false);
+        play.setEnabled(true);
+        delete.setEnabled(true);
 
         record.setOnTouchListener(new View.OnTouchListener() {
 
@@ -160,12 +165,21 @@ public class FlashcardEditActivity extends AppCompatActivity {
     }
 
     public void play(View v) throws IOException{
-        MediaPlayer m = new MediaPlayer();
-        m.setDataSource(outputFile);
-        m.prepare();
-        m.start();
+        final int duration = flashcard.sound();
 
-        Toast.makeText(this,"Playing Audio", Toast.LENGTH_SHORT).show();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for(int i=0;i<=100;i++) {
+                    try{
+                        Thread.sleep(duration/100);
+                        progress.setProgress(i);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 
     public void addFlashcard() {
