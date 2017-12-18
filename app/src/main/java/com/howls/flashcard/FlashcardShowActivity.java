@@ -35,7 +35,8 @@ import io.netopen.hotbitmapgg.library.view.RingProgressBar;
 
 public class FlashcardShowActivity extends AppCompatActivity {
 
-    private static final String EXTRA_MESSAGE = "AlbumId";
+    static final String EXTRA_MESSAGE = "AlbumId";
+    static final String EXTRA_MESSAGE2 = "flashcardId";
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private MyDBHandle db = new MyDBHandle(this);
@@ -128,18 +129,21 @@ public class FlashcardShowActivity extends AppCompatActivity {
             FlashcardShowActivity activity = (FlashcardShowActivity) getActivity();
             albumId = activity.getMyData();
 
-            db = new MyDBHandle(getContext());
-            final List<Flashcard> flashcards = db.getAllFashcards(albumId);
             TextView word = rootView.findViewById(R.id.word);
             TextView translate = rootView.findViewById(R.id.translate);
             TextView examples = rootView.findViewById(R.id.examples);
             TextView notes = rootView.findViewById(R.id.notes);
             ImageButton play = rootView.findViewById(R.id.play);
             ImageButton delete = rootView.findViewById(R.id.delete);
+            ImageButton edit = rootView.findViewById(R.id.edit);
+            final RingProgressBar progress = rootView.findViewById(R.id.progress);
+
+            db = new MyDBHandle(getContext());
+            final List<Flashcard> flashcards = db.getAllFashcards(albumId);
 
             int pos = Integer.parseInt(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             final Flashcard flashcard = flashcards.get(pos);
-            final RingProgressBar progress = rootView.findViewById(R.id.progress);
+
             word.setText(flashcard.getWord());
             translate.setText(flashcard.getTranslate());
             examples.setText(flashcard.getExamples());
@@ -151,48 +155,57 @@ public class FlashcardShowActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v)
                 {
-                    final int duration = flashcard.sound();
+                final int duration = flashcard.sound();
 
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            for(int i=0;i<=100;i++) {
-                                try{
-                                    Thread.sleep(duration/100);
-                                    progress.setProgress(i);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                            }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                    for(int i=0;i<=100;i++) {
+                        try{
+                            Thread.sleep(duration/100);
+                            progress.setProgress(i);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
-                    }).start();
+                    }
+                    }
+                }).start();
                 }
             });
 
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                    alert.setMessage("Are you sure you want to delete?");
-                    alert.setCancelable(false);
-                    alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            File sound = new File(flashcard.getSound());
-                            sound.delete();
-                            db.deleteFlashcard(String.valueOf(flashcard.getId()));
-                            Intent intent = new Intent(getContext(),FlashcardListActivity.class);
-                            intent.putExtra(EXTRA_MESSAGE, albumId);
-                            startActivity(intent);
-                        }
-                    });
-                    alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                alert.setMessage("Are you sure you want to delete?");
+                alert.setCancelable(false);
+                alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    File sound = new File(flashcard.getSound());
+                    sound.delete();
+                    db.deleteFlashcard(String.valueOf(flashcard.getId()));
+                    Intent intent = new Intent(getContext(),FlashcardListActivity.class);
+                    intent.putExtra(EXTRA_MESSAGE, albumId);
+                    startActivity(intent);
+                    }
+                });
+                alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
-                        }
-                    });
-                    alert.create().show();
+                    }
+                });
+                alert.create().show();
+                }
+            });
+
+            edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getContext(),FlashcardEditActivity.class);
+                    intent.putExtra(EXTRA_MESSAGE2, String.valueOf(flashcard.getId()));
+                    startActivity(intent);
                 }
             });
 

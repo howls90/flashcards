@@ -66,6 +66,25 @@ public class MyDBHandle extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void upgradeFlashcard(Flashcard flashcard) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_FLASHCARD_NAME,flashcard.getWord());
+        values.put(COLUMN_FLASHCARD_READ,flashcard.getRead());
+        values.put(COLUMN_FLASHCARD_TRANSLATE,flashcard.getTranslate());
+        values.put(COLUMN_FLASHCARD_SOUND,flashcard.getSound());
+        values.put(COLUMN_FLASHCARD_ALBUM,flashcard.getAlbumId());
+        values.put(COLUMN_FLASHCARD_EXAMPLES,flashcard.getExamples());
+        values.put(COLUMN_FLASHCARD_NOTES,flashcard.getNotes());
+        SQLiteDatabase db = getWritableDatabase();
+
+        String where = "id=?";
+        String[] whereArgs = new String[] {String.valueOf(flashcard.getId())};
+
+        db.update(TABLE_FLASHCARD,values,where,whereArgs);
+
+
+    }
+
     public void addAlbum(Album album) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_ALBUM_NAME,album.getName());
@@ -77,7 +96,7 @@ public class MyDBHandle extends SQLiteOpenHelper {
     public Flashcard getFlashcard(String id) {
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.rawQuery( "select * from "+TABLE_FLASHCARD,null);
+        Cursor cursor = db.rawQuery( "select * from "+TABLE_FLASHCARD+" where id="+id,null);
 
         if (cursor != null)
             cursor.moveToFirst();
