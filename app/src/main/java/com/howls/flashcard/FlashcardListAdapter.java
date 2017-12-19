@@ -48,6 +48,8 @@ public class FlashcardListAdapter extends BaseExpandableListAdapter{
 
     @Override
     public long getGroupId(int i) {
+        //return flashcardList.get(i).getPosition();
+        Log.i("ffffff",flashcardList.get(i).getWord());
         return 0;
     }
 
@@ -64,7 +66,7 @@ public class FlashcardListAdapter extends BaseExpandableListAdapter{
     @Override
     public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
         View v = View.inflate(mContext,R.layout.flashcard_list_group,null);
-        TextView word = (TextView)v.findViewById(R.id.word);
+        TextView word = v.findViewById(R.id.word);
         word.setText(flashcardList.get(i).getWord());
         v.setTag(flashcardList.get(i).getId());
         return v;
@@ -73,11 +75,11 @@ public class FlashcardListAdapter extends BaseExpandableListAdapter{
     @Override
     public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
         View v = View.inflate(mContext,R.layout.flashcard_list_child,null);
-        TextView read = (TextView)v.findViewById(R.id.read);
-        TextView translate = (TextView)v.findViewById(R.id.translate);
+        TextView read = v.findViewById(R.id.read);
+        TextView translate = v.findViewById(R.id.translate);
         read.setText(flashcardList.get(i).getRead());
         translate.setText(flashcardList.get(i).getTranslate());
-
+        flashcardList.get(i).setPosition(i);
 
         v.setTag(flashcardList.get(i).getId());
 
@@ -94,10 +96,15 @@ public class FlashcardListAdapter extends BaseExpandableListAdapter{
         List<Flashcard> newList = new ArrayList<Flashcard>();
         newList.clear();
 
+        int position=0, childID=0;
         for (Flashcard flashcard : flashcardsOrigin) {
             if (flashcard.getWord().toLowerCase().contains(query) || flashcard.getTranslate().toLowerCase().contains(query)) {
+                flashcard.setPosition(position);
+                flashcard.setChildID(childID);
                 newList.add(flashcard);
+                childID++;
             }
+            position++;
 
         }
 

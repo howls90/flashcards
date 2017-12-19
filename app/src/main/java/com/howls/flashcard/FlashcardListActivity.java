@@ -119,12 +119,7 @@ public class FlashcardListActivity extends AppCompatActivity
 
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
-            try {
-                MediaPlayer m = new MediaPlayer();
-                m.setDataSource(flashcardList.get(i).getSound());
-                m.prepare();
-                m.start();
-            } catch (IOException e) {}
+            flashcardList.get(i).sound();
             return false;
             }
         });
@@ -135,6 +130,7 @@ public class FlashcardListActivity extends AppCompatActivity
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
             Intent intent = new Intent(getApplicationContext(), FlashcardShowActivity.class);
             intent.putExtra(EXTRA_MESSAGE, String.valueOf(groupPosition)+"/"+albumId);
+            //intent.putExtra(EXTRA_MESSAGE, String.valueOf()+"/"+albumId);
             startActivity(intent);
             return true;
             }

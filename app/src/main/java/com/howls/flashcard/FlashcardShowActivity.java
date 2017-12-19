@@ -51,7 +51,7 @@ public class FlashcardShowActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         String msn = getIntent().getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
-        String pos = msn.split("/")[0];
+        String childID = msn.split("/")[0];
         albumId = msn.split("/")[1];
 
         getSupportActionBar().setTitle(db.getAlbum(albumId).getName());
@@ -60,7 +60,8 @@ public class FlashcardShowActivity extends AppCompatActivity {
 
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setCurrentItem(Integer.valueOf(pos));
+
+        mViewPager.setCurrentItem(Integer.valueOf(childID));
     }
 
 

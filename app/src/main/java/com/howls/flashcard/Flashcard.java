@@ -11,7 +11,7 @@ import java.io.IOException;
  */
 
 public class Flashcard {
-    private int id;
+    private int id, position, childID;
     private String word, read,translate,sound, albumId, examples, notes;
     private MediaPlayer m;
 
@@ -68,6 +68,22 @@ public class Flashcard {
     public String getNotes() {return notes;}
 
     public void setNotes(String notes) {this.notes = notes;}
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public int getChildID() {
+        return childID;
+    }
+
+    public void setChildID(int childID) {
+        this.childID = childID;
+    }
 
     public int sound() {
         int duration = 0;
