@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -119,8 +120,8 @@ public class FlashcardListActivity extends AppCompatActivity
 
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
-            flashcardList.get(i).sound();
-            return false;
+                flashcardList.get(i).sound();
+                return false;
             }
         });
 
@@ -128,11 +129,10 @@ public class FlashcardListActivity extends AppCompatActivity
 
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-            Intent intent = new Intent(getApplicationContext(), FlashcardShowActivity.class);
-            intent.putExtra(EXTRA_MESSAGE, String.valueOf(groupPosition)+"/"+albumId);
-            //intent.putExtra(EXTRA_MESSAGE, String.valueOf()+"/"+albumId);
-            startActivity(intent);
-            return true;
+                Intent intent = new Intent(getApplicationContext(), FlashcardShowActivity.class);
+                intent.putExtra(EXTRA_MESSAGE, String.valueOf(v.getTag())+"/"+albumId);
+                startActivity(intent);
+                return true;
             }
         });
     }

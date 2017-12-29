@@ -6,7 +6,7 @@ package com.howls.flashcard;
 
 public class Album {
 
-    private int id, num;
+    private int id, postion;
     private String name;
 
     public Album(String name) {
@@ -29,7 +29,7 @@ public class Album {
         this.name = name;
     }
 
-    public int getNum() {return num;}
+    public int getPostion() {return postion;}
 
-    public void setNum(int num) {this.num = num;}
+    public void setPostion(int postion) {this.postion = postion;}
 }

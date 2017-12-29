@@ -144,13 +144,16 @@ public class MyDBHandle extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
+        int position = 0;
         if (cursor.moveToFirst()) {
             do {
                 Flashcard flashcard = new Flashcard(cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getString(4),cursor.getString(7));
                 flashcard.setId(Integer.parseInt(cursor.getString(0)));
                 flashcard.setExamples(cursor.getString(5));
                 flashcard.setNotes(cursor.getString(6));
+                flashcard.setPosition(position);
                 flashcardList.add(flashcard);
+                position ++;
             } while (cursor.moveToNext());
         }
         db.close();
