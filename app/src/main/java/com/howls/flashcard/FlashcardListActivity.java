@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.SearchView;
@@ -247,9 +248,25 @@ public class FlashcardListActivity extends AppCompatActivity
         }
         if (id == R.id.action_quiz) {
             if (flashcardList.size() >= 3) {
-                Intent intent = new Intent(this, FlashcardQuizActivity.class);
-                intent.putExtra(EXTRA_MESSAGE, String.valueOf(albumId));
-                startActivity(intent);
+
+
+
+
+
+                final CharSequence[] items = {"Sound", "Word", "Translate"};
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+                dialogBuilder.setTitle("Select Type");
+                dialogBuilder.setItems(items, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do anything you want here
+                    }
+
+                });
+                dialogBuilder.create().show();
+
+
+
             } else {
                 Toast.makeText(this, "Not enought flashcards to play", Toast.LENGTH_SHORT).show();
             }

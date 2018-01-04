@@ -72,8 +72,7 @@ public class FlashcardQuizActivity extends AppCompatActivity {
 
     public String getMyData() {
         Intent intent = getIntent();
-        String msn = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
-        return msn;
+        return intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
     }
 
     @Override
@@ -113,7 +112,7 @@ public class FlashcardQuizActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             setHasOptionsMenu(true);
-            final View rootView = inflater.inflate(R.layout.fragment_flashcard_quiz, container, false);
+            final View rootView = inflater.inflate(R.layout.fragment_flashcard_quiz_inverse, container, false);
 
             FlashcardQuizActivity activity = (FlashcardQuizActivity) getActivity();
             albumId = activity.getMyData();

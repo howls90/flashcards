@@ -19,10 +19,10 @@
         tools:ignore="MissingConstraints">
 
         <!-- Back Layout Goes Here -->
-        <include layout="@layout/flashcard_quiz_back" />
+        <include layout="@layout/flashcard_quiz_front" />
 
         <!-- Front Layout Goes Here -->
-        <include layout="@layout/flashcard_quiz_front" />
+        <include layout="@layout/flashcard_quiz_back" />
 
 
     </com.wajahatkarim3.easyflipview.EasyFlipView>
