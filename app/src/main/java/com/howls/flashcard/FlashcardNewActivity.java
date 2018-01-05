@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import io.netopen.hotbitmapgg.library.view.RingProgressBar;
 
@@ -33,6 +35,7 @@ public class FlashcardNewActivity extends AppCompatActivity {
     private String outputFile = null;
     private String albumId;
     private ImageButton play, delete, record;
+    private boolean is_correct = false;
 
 
     @Override
@@ -80,10 +83,10 @@ public class FlashcardNewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                File sound = new File(outputFile);
-                sound.delete();
-                play.setEnabled(false);
-                Toast.makeText(getApplicationContext(),"Audio Deleted", Toast.LENGTH_SHORT).show();
+            File sound = new File(outputFile);
+            sound.delete();
+            play.setEnabled(false);
+            Toast.makeText(getApplicationContext(),"Audio Deleted", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -115,8 +118,6 @@ public class FlashcardNewActivity extends AppCompatActivity {
     }
 
     public void start() {
-
-
         String wordS = word.getText().toString();
 
         outputFile = Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+wordS+".3gp";
@@ -158,14 +159,14 @@ public class FlashcardNewActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                for(int i=0;i<=100;i++) {
-                    try{
-                        Thread.sleep(duration/100);
-                        progress.setProgress(i);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+            for(int i=0;i<=100;i++) {
+                try{
+                    Thread.sleep(duration/100);
+                    progress.setProgress(i);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+            }
             }
         }).start();
     }

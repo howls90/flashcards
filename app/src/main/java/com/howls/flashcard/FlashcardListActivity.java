@@ -82,7 +82,7 @@ public class FlashcardListActivity extends AppCompatActivity
                         adapter = new FlashcardListAdapter(getApplicationContext(), flashcardList);
                         flashcardLayout.setAdapter(adapter);
                         return false;
-                    }
+                        }
                 });
             }
         }
@@ -97,7 +97,8 @@ public class FlashcardListActivity extends AppCompatActivity
                 }
             }
         } else {
-            setTitle("Default");
+            setTitle(albumList.get(0).getName());
+            albumId = albumList.get(0).getId();
             menu.getItem(0).setChecked(true);
         }
 
@@ -121,8 +122,8 @@ public class FlashcardListActivity extends AppCompatActivity
 
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
-                flashcardList.get(i).sound();
-                return false;
+            flashcardList.get(i).sound();
+            return false;
             }
         });
 
@@ -130,10 +131,10 @@ public class FlashcardListActivity extends AppCompatActivity
 
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Intent intent = new Intent(getApplicationContext(), FlashcardShowActivity.class);
-                intent.putExtra(EXTRA_MESSAGE, String.valueOf(v.getTag())+"/"+albumId);
-                startActivity(intent);
-                return true;
+            Intent intent = new Intent(getApplicationContext(), FlashcardShowActivity.class);
+            intent.putExtra(EXTRA_MESSAGE, String.valueOf(v.getTag())+"/"+albumId);
+            startActivity(intent);
+            return true;
             }
         });
     }
@@ -188,13 +189,13 @@ public class FlashcardListActivity extends AppCompatActivity
 
         alert.setPositiveButton("Create", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                String name = edittext.getText().toString();
-                Album album = new Album(name);
+            String name = edittext.getText().toString();
+            Album album = new Album(name);
 
-                db = new MyDBHandle(getApplicationContext());
-                db.addAlbum(album);
-                finish();
-                startActivity(getIntent());
+            db = new MyDBHandle(getApplicationContext());
+            db.addAlbum(album);
+            finish();
+            startActivity(getIntent());
             }
         });
 
@@ -213,16 +214,16 @@ public class FlashcardListActivity extends AppCompatActivity
             m.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
-                    flashcardLayout.expandGroup(i);
-                    m.stop();
-                    if (i < flashcardList.size()-1) {
-                        i++;
-                        if (flashcardList.get(i).getSound() != null) {
-                            playAudio(flashcardList.get(i).getSound());
-                        } else {
+                flashcardLayout.expandGroup(i);
+                m.stop();
+                if (i < flashcardList.size()-1) {
+                    i++;
+                    if (flashcardList.get(i).getSound() != null) {
+                        playAudio(flashcardList.get(i).getSound());
+                    } else {
 
-                        }
-                    } else i = 0;
+                    }
+                } else i = 0;
                 }
             });
             m.start();
@@ -255,9 +256,9 @@ public class FlashcardListActivity extends AppCompatActivity
                 dialogBuilder.setItems(items, new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(getApplicationContext(), FlashcardQuizActivity.class);
-                        intent.putExtra(EXTRA_MESSAGE, String.valueOf(albumId)+"/"+(String) items[which]);
-                        startActivity(intent);
+                    Intent intent = new Intent(getApplicationContext(), FlashcardQuizActivity.class);
+                    intent.putExtra(EXTRA_MESSAGE, String.valueOf(albumId)+"/"+(String) items[which]);
+                    startActivity(intent);
                     }
 
                 });
