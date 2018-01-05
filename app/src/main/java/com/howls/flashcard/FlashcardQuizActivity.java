@@ -55,12 +55,13 @@ public class FlashcardQuizActivity extends AppCompatActivity {
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        albumId = getIntent().getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
+        albumId = getIntent().getStringExtra(FlashcardListActivity.EXTRA_MESSAGE).split("/")[0];
 
         getSupportActionBar().setTitle(db.getAlbum(albumId).getName());
 
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
     }
 
 
@@ -72,7 +73,12 @@ public class FlashcardQuizActivity extends AppCompatActivity {
 
     public String getMyData() {
         Intent intent = getIntent();
-        return intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
+        return intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE).split("/")[0];
+    }
+
+    public String getQuiz() {
+        Intent intent = getIntent();
+        return intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE).split("/")[1];
     }
 
     @Override
@@ -92,7 +98,6 @@ public class FlashcardQuizActivity extends AppCompatActivity {
     public static class PlaceholderFragment extends Fragment {
 
         MyDBHandle db = new MyDBHandle(getContext());
-        String outputFile;
         String albumId;
 
         private static final String ARG_SECTION_NUMBER = "section_number";
@@ -112,9 +117,16 @@ public class FlashcardQuizActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             setHasOptionsMenu(true);
-            final View rootView = inflater.inflate(R.layout.fragment_flashcard_quiz_inverse, container, false);
+
+            final View rootView;
 
             FlashcardQuizActivity activity = (FlashcardQuizActivity) getActivity();
+            if (activity.getQuiz().equals("Words")) {
+                rootView = inflater.inflate(R.layout.fragment_flashcard_quiz_inverse, container, false);
+            } else {
+                rootView = inflater.inflate(R.layout.fragment_flashcard_quiz, container, false);
+            }
+
             albumId = activity.getMyData();
 
             db = new MyDBHandle(getContext());
@@ -283,7 +295,7 @@ public class FlashcardQuizActivity extends AppCompatActivity {
         }
 
         Intent intent = getIntent();
-        String albumId = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE);
+        String albumId = intent.getStringExtra(FlashcardListActivity.EXTRA_MESSAGE).split("/")[0];
 
         @Override
         public Fragment getItem(int position) {

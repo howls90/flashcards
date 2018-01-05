@@ -249,23 +249,19 @@ public class FlashcardListActivity extends AppCompatActivity
         if (id == R.id.action_quiz) {
             if (flashcardList.size() >= 3) {
 
-
-
-
-
-                final CharSequence[] items = {"Sound", "Word", "Translate"};
+                final CharSequence[] items = {"Sounds", "Words", "Translates"};
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
                 dialogBuilder.setTitle("Select Type");
                 dialogBuilder.setItems(items, new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
-                        // Do anything you want here
+                        Intent intent = new Intent(getApplicationContext(), FlashcardQuizActivity.class);
+                        intent.putExtra(EXTRA_MESSAGE, String.valueOf(albumId)+"/"+(String) items[which]);
+                        startActivity(intent);
                     }
 
                 });
                 dialogBuilder.create().show();
-
-
 
             } else {
                 Toast.makeText(this, "Not enought flashcards to play", Toast.LENGTH_SHORT).show();
