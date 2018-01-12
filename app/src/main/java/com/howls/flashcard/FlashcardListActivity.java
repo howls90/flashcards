@@ -250,7 +250,7 @@ public class FlashcardListActivity extends AppCompatActivity
         if (id == R.id.action_quiz) {
             if (flashcardList.size() >= 3) {
 
-                final CharSequence[] items = {"Sounds", "Words", "Translates"};
+                final CharSequence[] items = {"Sounds", "Words", "Translate"};
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
                 dialogBuilder.setTitle("Select Type");
                 dialogBuilder.setItems(items, new DialogInterface.OnClickListener() {

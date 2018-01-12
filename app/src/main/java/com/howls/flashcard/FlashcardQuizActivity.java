@@ -284,6 +284,7 @@ public class FlashcardQuizActivity extends AppCompatActivity {
                 TextView term = rootView.findViewById(R.id.term);
                 term.setText(flashcard.getWord());
             } else {
+                Log.i("dins translate","dinsss");
                 albumId = activity.getMyData();
 
                 db = new MyDBHandle(getContext());
